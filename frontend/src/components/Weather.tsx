@@ -20,7 +20,7 @@ const Weather = () => {
 
   const fetchWeatherData = async () => {
     try {
-      const response = await fetch('/weatherforecast');
+      const response = await fetch('/api/weatherforecast');
       const data = await response.json();
       setWeatherData(data);
       setLoading(false);
@@ -90,14 +90,14 @@ const Weather = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="min-h-screen bg-gradient-to-b from-blue-400 to-blue-600 p-4"
+      className="min-h-screen p-4 bg-gradient-to-b from-blue-400 to-blue-600"
     >
       {/* Botón de regresar */}
       <motion.button
         onClick={() => navigate('/menu')}
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
-        className="absolute top-16 left-4 w-10 h-10 rounded-full bg-white/20 backdrop-blur-lg flex items-center justify-center text-white"
+        className="absolute flex items-center justify-center w-10 h-10 text-white rounded-full top-16 left-4 bg-white/20 backdrop-blur-lg"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
       >
@@ -110,14 +110,14 @@ const Weather = () => {
         <motion.h1
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-2xl font-semibold text-white mb-6 text-center"
+          className="mb-6 text-2xl font-semibold text-center text-white"
         >
           Pronóstico del Tiempo
         </motion.h1>
 
         {loading ? (
-          <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
+          <div className="flex items-center justify-center h-64">
+            <div className="w-12 h-12 border-b-2 border-white rounded-full animate-spin"></div>
           </div>
         ) : (
           <div className="grid gap-4">
@@ -133,16 +133,16 @@ const Weather = () => {
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex-1">
-                      <h2 className="text-xl font-semibold mb-1 capitalize">
+                      <h2 className="mb-1 text-xl font-semibold capitalize">
                         {formatDate(weather.date)}
                       </h2>
                       <div className="flex items-baseline gap-2">
                         <p className="text-4xl font-light">{weather.temperatureC}°C</p>
                         <p className="text-lg opacity-75">/ {weather.temperatureF}°F</p>
                       </div>
-                      <p className="text-sm opacity-90 mt-1 capitalize">{weather.summary}</p>
+                      <p className="mt-1 text-sm capitalize opacity-90">{weather.summary}</p>
                     </div>
-                    <div className="text-6xl ml-4">
+                    <div className="ml-4 text-6xl">
                       {icon}
                     </div>
                   </div>

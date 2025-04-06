@@ -64,7 +64,7 @@ var summaries = new[]
 
 // Endpoint para obtener pronósticos
 app.MapGet(
-        "/weatherforecast",
+        "/api/weatherforecast",
         async (ApplicationDbContext db) =>
         {
             var forecasts = await db.WeatherForecasts.ToListAsync();
@@ -92,7 +92,7 @@ app.MapGet(
 
 // Endpoint para crear un nuevo pronóstico
 app.MapPost(
-        "/weatherforecast",
+        "/api/weatherforecast",
         async (WeatherForecast forecast, ApplicationDbContext db) =>
         {
             db.WeatherForecasts.Add(forecast);

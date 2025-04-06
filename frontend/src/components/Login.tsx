@@ -14,13 +14,11 @@ export const Login = () => {
     navigate('/menu');
   };
 
-  const handleGitHubClick = () => {
-    window.open('https://github.com/darklordcoder/iPhoneISUMatematicas', '_blank');
-  };
+
 
   return (
     <motion.div 
-      className="h-full bg-gradient-to-b from-[#ffffff] to-[#777777] px-6 py-8"
+      className="h-full bg-gradient-to-b from-[#ffffff] to-[#C64747] px-6 py-8"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -37,12 +35,12 @@ export const Login = () => {
         <h1 className="text-2xl font-bold text-[#2c4c7c]">
           Métodos matemáticos en las ciencias computacionales
         </h1>
-        <p className="text-[#5a7ba5] mt-2">
-          Practicas de laboratorio
+        <p className="text-[#ccccc] mt-2 mb-8">
+        Actividad de Aprendizaje 1<br/>Diseño y verificación de algoritmos de seguridad
         </p>
 
-        <p className="text-[#5a7ba5] mt-2">
-          Ingrese su usuario y contraseña para acceder al sistema
+        <p className="text-[#000] font-bold mt-2">
+          Ingrese su usuario y password
         </p>
       </motion.div>
 
@@ -104,7 +102,7 @@ export const Login = () => {
         <motion.button
           type="submit"
           className="w-full h-11 mt-6
-                   bg-gradient-to-b from-[#4994e4] to-[#3478c9]
+                  bg-red-900
                    text-white font-semibold
                    rounded-xl
                    shadow-md

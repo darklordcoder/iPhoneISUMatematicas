@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import logo from '../assets/images/7cdb546f-b9fc-4415-89c4-dd673f15cfe7.png';
 
 export const Login = () => {
   const [username, setUsername] = useState('');
@@ -13,9 +14,13 @@ export const Login = () => {
     navigate('/menu');
   };
 
+  const handleGitHubClick = () => {
+    window.open('https://github.com/darklordcoder/iPhoneISUMatematicas', '_blank');
+  };
+
   return (
     <motion.div 
-      className="h-full bg-gradient-to-b from-[#b2d4f7] to-[#c9e0f8] px-6 py-8"
+      className="h-full bg-gradient-to-b from-[#ffffff] to-[#777777] px-6 py-8"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -23,16 +28,21 @@ export const Login = () => {
     >
       {/* Logo o título */}
       <motion.div 
-        className="text-center mb-8"
+        className="mb-8 text-center"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
       >
+        <img src={logo} alt="Logo" className="mx-auto mb-4" />
         <h1 className="text-2xl font-bold text-[#2c4c7c]">
-          Welcome Back
+          Métodos matemáticos en las ciencias computacionales
         </h1>
         <p className="text-[#5a7ba5] mt-2">
-          Please sign in to continue
+          Practicas de laboratorio
+        </p>
+
+        <p className="text-[#5a7ba5] mt-2">
+          Ingrese su usuario y contraseña para acceder al sistema
         </p>
       </motion.div>
 
@@ -103,35 +113,18 @@ export const Login = () => {
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
         >
-          Sign In
+          LOGIN
         </motion.button>
 
         {/* Enlaces adicionales */}
         <motion.div 
-          className="mt-6 flex flex-col items-center gap-4"
+          className="flex flex-col items-center gap-4 mt-6"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
         >
-          <motion.button
-            type="button"
-            className="text-[#3478c9] text-sm"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Forgot Password?
-          </motion.button>
-          <div className="text-[#5a7ba5] text-sm">
-            Don't have an account?{' '}
-            <motion.button
-              type="button"
-              className="text-[#3478c9] font-medium"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              Sign Up
-            </motion.button>
-          </div>
+          {/* Botón de GitHub */}
+         
         </motion.div>
       </motion.form>
     </motion.div>

@@ -11,7 +11,7 @@ builder.WebHost.ConfigureKestrel(serverOptions =>
 });
 
 // Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -48,60 +48,8 @@ app.UseStaticFiles();
 // Configurar el enrutamiento
 app.UseRouting();
 
-var summaries = new[]
-{
-    "Freezing",
-    "Bracing",
-    "Chilly",
-    "Cool",
-    "Mild",
-    "Warm",
-    "Balmy",
-    "Hot",
-    "Sweltering",
-    "Scorching",
-};
-
-// Endpoint para obtener pronósticos
-app.MapGet(
-        "/api/weatherforecast",
-        async (ApplicationDbContext db) =>
-        {
-            var forecasts = await db.WeatherForecasts.ToListAsync();
-            if (!forecasts.Any())
-            {
-                // Si no hay datos, crear algunos de ejemplo
-                forecasts = Enumerable
-                    .Range(1, 5)
-                    .Select(index => new WeatherForecast
-                    {
-                        Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                        TemperatureC = Random.Shared.Next(-20, 55),
-                        Summary = summaries[Random.Shared.Next(summaries.Length)],
-                    })
-                    .ToList();
-
-                await db.WeatherForecasts.AddRangeAsync(forecasts);
-                await db.SaveChangesAsync();
-            }
-            return forecasts;
-        }
-    )
-    .WithName("GetWeatherForecast")
-    .WithOpenApi();
-
-// Endpoint para crear un nuevo pronóstico
-app.MapPost(
-        "/api/weatherforecast",
-        async (WeatherForecast forecast, ApplicationDbContext db) =>
-        {
-            db.WeatherForecasts.Add(forecast);
-            await db.SaveChangesAsync();
-            return Results.Created($"/weatherforecast/{forecast.Id}", forecast);
-        }
-    )
-    .WithName("CreateWeatherForecast")
-    .WithOpenApi();
+// Agregar endpoint para controladores
+app.MapControllers();
 
 // Fallback para SPA
 app.MapFallbackToFile("index.html");

@@ -8,6 +8,9 @@ out/
 x64/
 x86/
 
+# Base de datos
+Backend/database/*
+
 ## Archivos de Visual Studio
 .vs/
 *.user

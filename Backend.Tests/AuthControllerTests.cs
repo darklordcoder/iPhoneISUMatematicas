@@ -1,7 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
 using Backend.Models;
-using Backend.Tests.Models;
 using Microsoft.AspNetCore.Mvc.Testing;
 using System.Text.Json;
 using Xunit;
@@ -32,13 +31,14 @@ public class AuthControllerTests : IClassFixture<TestWebApplicationFactory>
 
         // Act
         var response = await _client.PostAsJsonAsync("/api/auth/register", registerRequest);
-        var content = await response.Content.ReadFromJsonAsync<AuthResponse>(_jsonOptions);
+        var responseString = await response.Content.ReadAsStringAsync();
+        Console.WriteLine($"Register response: {responseString}");
+        var content = JsonSerializer.Deserialize<Dictionary<string, string>>(responseString, _jsonOptions);
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(content);
-        Assert.Equal("User successfully registered", content.Message);
-        Console.WriteLine($"Register response: {await response.Content.ReadAsStringAsync()}");
+        Assert.Equal("User successfully registered", content["message"]);
     }
 
     [Fact]
@@ -50,13 +50,14 @@ public class AuthControllerTests : IClassFixture<TestWebApplicationFactory>
 
         // Act
         var response = await _client.PostAsJsonAsync("/api/auth/register", registerRequest);
-        var content = await response.Content.ReadFromJsonAsync<AuthResponse>(_jsonOptions);
+        var responseString = await response.Content.ReadAsStringAsync();
+        Console.WriteLine($"Register (existing) response: {responseString}");
+        var content = JsonSerializer.Deserialize<Dictionary<string, string>>(responseString, _jsonOptions);
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.NotNull(content);
-        Assert.Equal("Username is already taken", content.Message);
-        Console.WriteLine($"Register (existing) response: {await response.Content.ReadAsStringAsync()}");
+        Assert.Equal("Username is already taken", content["message"]);
     }
 
     [Fact]
@@ -67,13 +68,14 @@ public class AuthControllerTests : IClassFixture<TestWebApplicationFactory>
 
         // Act
         var response = await _client.PostAsJsonAsync("/api/auth/register", registerRequest);
-        var content = await response.Content.ReadFromJsonAsync<AuthResponse>(_jsonOptions);
+        var responseString = await response.Content.ReadAsStringAsync();
+        Console.WriteLine($"Register (short password) response: {responseString}");
+        var content = JsonSerializer.Deserialize<Dictionary<string, string>>(responseString, _jsonOptions);
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.NotNull(content);
-        Assert.Contains("Password must be at least", content.Message);
-        Console.WriteLine($"Register (short password) response: {await response.Content.ReadAsStringAsync()}");
+        Assert.Contains("Password must be at least", content["message"]);
     }
 
     [Fact]
@@ -87,13 +89,14 @@ public class AuthControllerTests : IClassFixture<TestWebApplicationFactory>
 
         // Act
         var response = await _client.PostAsJsonAsync("/api/auth/login", loginRequest);
-        var content = await response.Content.ReadFromJsonAsync<AuthResponse>(_jsonOptions);
+        var responseString = await response.Content.ReadAsStringAsync();
+        Console.WriteLine($"Login response: {responseString}");
+        var content = JsonSerializer.Deserialize<Dictionary<string, string>>(responseString, _jsonOptions);
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(content);
-        Assert.NotNull(content.Token);
-        Console.WriteLine($"Login response: {await response.Content.ReadAsStringAsync()}");
+        Assert.NotNull(content["token"]);
     }
 
     [Fact]
@@ -106,13 +109,12 @@ public class AuthControllerTests : IClassFixture<TestWebApplicationFactory>
         var response = await _client.PostAsJsonAsync("/api/auth/login", loginRequest);
         var responseString = await response.Content.ReadAsStringAsync();
         Console.WriteLine($"Response content: {responseString}");
-
-        var content = await response.Content.ReadFromJsonAsync<AuthResponse>(_jsonOptions);
+        var content = JsonSerializer.Deserialize<Dictionary<string, string>>(responseString, _jsonOptions);
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.NotNull(content);
-        Assert.Equal("User not registered", content.Message);
+        Assert.Equal("User not registered", content["message"]);
     }
 
     [Fact]
@@ -130,12 +132,14 @@ public class AuthControllerTests : IClassFixture<TestWebApplicationFactory>
             await _client.PostAsJsonAsync("/api/auth/login", loginRequest);
         }
         var response = await _client.PostAsJsonAsync("/api/auth/login", loginRequest);
-        var content = await response.Content.ReadFromJsonAsync<AuthResponse>(_jsonOptions);
+        var responseString = await response.Content.ReadAsStringAsync();
+        Console.WriteLine($"Response content: {responseString}");
+        var content = JsonSerializer.Deserialize<Dictionary<string, string>>(responseString, _jsonOptions);
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.NotNull(content);
-        Assert.Equal("Account temporarily locked", content.Message);
+        Assert.Equal("Account temporarily locked", content["message"]);
     }
 
     [Fact]
@@ -146,8 +150,9 @@ public class AuthControllerTests : IClassFixture<TestWebApplicationFactory>
         var password = "password123";
         await _client.PostAsJsonAsync("/api/auth/register", new RegisterRequest(username, password));
         var loginResponse = await _client.PostAsJsonAsync("/api/auth/login", new LoginRequest(username, password));
-        var loginContent = await loginResponse.Content.ReadFromJsonAsync<AuthResponse>(_jsonOptions);
-        var logoutRequest = new LogoutRequest(loginContent?.Token ?? "");
+        var loginContent = JsonSerializer.Deserialize<Dictionary<string, string>>(
+            await loginResponse.Content.ReadAsStringAsync(), _jsonOptions);
+        var logoutRequest = new LogoutRequest(loginContent["token"]);
 
         // Act
         var response = await _client.PostAsJsonAsync("/api/auth/logout", logoutRequest);
@@ -156,16 +161,12 @@ public class AuthControllerTests : IClassFixture<TestWebApplicationFactory>
         Console.WriteLine($"Logout response content: {responseString}");
         Console.WriteLine($"Logout content type: {response.Content.Headers.ContentType}");
         Console.WriteLine($"Logout content length: {responseString.Length}");
-        if (responseString.Length > 0)
-        {
-            Console.WriteLine($"First character code: {(int)responseString[0]}");
-        }
-        var content = await response.Content.ReadFromJsonAsync<AuthResponse>(_jsonOptions);
+        var content = JsonSerializer.Deserialize<Dictionary<string, string>>(responseString, _jsonOptions);
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(content);
-        Assert.Equal("Successfully logged out", content.Message);
+        Assert.Equal("Successfully logged out", content["message"]);
     }
 
     [Fact]
@@ -176,17 +177,19 @@ public class AuthControllerTests : IClassFixture<TestWebApplicationFactory>
         var password = "password123";
         await _client.PostAsJsonAsync("/api/auth/register", new RegisterRequest(username, password));
         var loginResponse = await _client.PostAsJsonAsync("/api/auth/login", new LoginRequest(username, password));
-        var loginContent = await loginResponse.Content.ReadFromJsonAsync<AuthResponse>(_jsonOptions);
-        var validateRequest = new ValidateTokenRequest(loginContent?.Token ?? "");
+        var loginContent = JsonSerializer.Deserialize<Dictionary<string, string>>(
+            await loginResponse.Content.ReadAsStringAsync(), _jsonOptions);
+        var validateRequest = new ValidateTokenRequest(loginContent["token"]);
 
         // Act
         var response = await _client.PostAsJsonAsync("/api/auth/validate", validateRequest);
-        var content = await response.Content.ReadFromJsonAsync<ValidateResponse>(_jsonOptions);
+        var responseString = await response.Content.ReadAsStringAsync();
+        var content = JsonSerializer.Deserialize<Dictionary<string, bool>>(responseString, _jsonOptions);
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(content);
-        Assert.True(content.IsValid);
+        Assert.True(content["isValid"]);
     }
 
     [Fact]
@@ -197,11 +200,12 @@ public class AuthControllerTests : IClassFixture<TestWebApplicationFactory>
 
         // Act
         var response = await _client.PostAsJsonAsync("/api/auth/validate", validateRequest);
-        var content = await response.Content.ReadFromJsonAsync<ValidateResponse>(_jsonOptions);
+        var responseString = await response.Content.ReadAsStringAsync();
+        var content = JsonSerializer.Deserialize<Dictionary<string, bool>>(responseString, _jsonOptions);
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(content);
-        Assert.False(content.IsValid);
+        Assert.False(content["isValid"]);
     }
 } 

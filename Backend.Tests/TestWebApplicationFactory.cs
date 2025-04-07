@@ -77,28 +77,25 @@ public class TestWebApplicationFactory : WebApplicationFactory<Program>
             {
                 var scopedServices = scope.ServiceProvider;
                 var db = scopedServices.GetRequiredService<ApplicationDbContext>();
-                var authService = scopedServices.GetRequiredService<AuthService>();
 
                 try
                 {
                     lock (_lock)
                     {
-                        // Limpiar datos existentes
+                        // Limpiar TODAS las tablas
+                        db.Database.ExecuteSqlRaw("DELETE FROM AuthTokens");
                         db.Database.ExecuteSqlRaw("DELETE FROM Users");
                         db.SaveChanges();
 
-                        // Crear usuarios de prueba de manera sincrónica para evitar problemas de concurrencia
-                        authService.RegisterUserAsync("admin", "admin123").GetAwaiter().GetResult();
-                        authService.RegisterUserAsync("profesor", "matematicas2024").GetAwaiter().GetResult();
-                        authService.RegisterUserAsync("estudiante", "calculo2024!").GetAwaiter().GetResult();
-                        
+                        // Reiniciar la secuencia de IDs
+                        db.Database.ExecuteSqlRaw("DELETE FROM sqlite_sequence");
                         db.SaveChanges();
                     }
                 }
                 catch (Exception ex)
                 {
                     var logger = scopedServices.GetRequiredService<ILogger<TestWebApplicationFactory>>();
-                    logger.LogError(ex, "Error al inicializar la base de datos de prueba");
+                    logger.LogError(ex, "Error al limpiar la base de datos de prueba");
                     throw;
                 }
             }

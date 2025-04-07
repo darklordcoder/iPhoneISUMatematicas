@@ -1,23 +1,12 @@
 using System.Net;
 using System.Net.Http.Json;
-using Backend.Controllers;
 using Backend.Models;
+using Backend.Tests.Models;
 using Microsoft.AspNetCore.Mvc.Testing;
 using System.Text.Json;
 using Xunit;
 
 namespace Backend.Tests;
-
-public class AuthResponse
-{
-    public string? Message { get; set; }
-    public string? Token { get; set; }
-}
-
-public class ValidateResponse
-{
-    public bool IsValid { get; set; }
-}
 
 public class AuthControllerTests : IClassFixture<TestWebApplicationFactory>
 {
@@ -48,7 +37,8 @@ public class AuthControllerTests : IClassFixture<TestWebApplicationFactory>
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(content);
-        Assert.Equal("Usuario registrado exitosamente", content.Message);
+        Assert.Equal("User successfully registered", content.Message);
+        Console.WriteLine($"Register response: {await response.Content.ReadAsStringAsync()}");
     }
 
     [Fact]
@@ -65,7 +55,8 @@ public class AuthControllerTests : IClassFixture<TestWebApplicationFactory>
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.NotNull(content);
-        Assert.Equal("El nombre de usuario ya está en uso", content.Message);
+        Assert.Equal("Username is already taken", content.Message);
+        Console.WriteLine($"Register (existing) response: {await response.Content.ReadAsStringAsync()}");
     }
 
     [Fact]
@@ -81,7 +72,8 @@ public class AuthControllerTests : IClassFixture<TestWebApplicationFactory>
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.NotNull(content);
-        Assert.Contains("La contraseña debe tener al menos", content.Message);
+        Assert.Contains("Password must be at least", content.Message);
+        Console.WriteLine($"Register (short password) response: {await response.Content.ReadAsStringAsync()}");
     }
 
     [Fact]
@@ -101,6 +93,7 @@ public class AuthControllerTests : IClassFixture<TestWebApplicationFactory>
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(content);
         Assert.NotNull(content.Token);
+        Console.WriteLine($"Login response: {await response.Content.ReadAsStringAsync()}");
     }
 
     [Fact]
@@ -119,7 +112,7 @@ public class AuthControllerTests : IClassFixture<TestWebApplicationFactory>
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.NotNull(content);
-        Assert.Equal("Usuario no registrado", content.Message);
+        Assert.Equal("User not registered", content.Message);
     }
 
     [Fact]
@@ -142,7 +135,7 @@ public class AuthControllerTests : IClassFixture<TestWebApplicationFactory>
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.NotNull(content);
-        Assert.Equal("Usuario bloqueado temporalmente", content.Message);
+        Assert.Equal("Account temporarily locked", content.Message);
     }
 
     [Fact]
@@ -158,12 +151,21 @@ public class AuthControllerTests : IClassFixture<TestWebApplicationFactory>
 
         // Act
         var response = await _client.PostAsJsonAsync("/api/auth/logout", logoutRequest);
+        var responseString = await response.Content.ReadAsStringAsync();
+        Console.WriteLine($"Logout response status: {response.StatusCode}");
+        Console.WriteLine($"Logout response content: {responseString}");
+        Console.WriteLine($"Logout content type: {response.Content.Headers.ContentType}");
+        Console.WriteLine($"Logout content length: {responseString.Length}");
+        if (responseString.Length > 0)
+        {
+            Console.WriteLine($"First character code: {(int)responseString[0]}");
+        }
         var content = await response.Content.ReadFromJsonAsync<AuthResponse>(_jsonOptions);
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(content);
-        Assert.Equal("Sesión cerrada exitosamente", content.Message);
+        Assert.Equal("Successfully logged out", content.Message);
     }
 
     [Fact]

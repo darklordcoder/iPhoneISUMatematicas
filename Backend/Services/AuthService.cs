@@ -27,13 +27,13 @@ public class AuthService
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
         if (user == null)
         {
-            return (false, "Usuario no registrado", null);
+            return (false, "User not registered", null);
         }
 
         // Verificar si el usuario está bloqueado
         if (user.IsLocked)
         {
-            return (false, "Usuario bloqueado temporalmente", null);
+            return (false, "Account temporarily locked", null);
         }
 
         // Verificar credenciales
@@ -45,9 +45,9 @@ public class AuthService
             {
                 user.LockoutEnd = DateTime.UtcNow.AddSeconds(TIEMPO_BLOQUEO);
                 await _context.SaveChangesAsync();
-                return (false, "Cuenta bloqueada por múltiples intentos", null);
+                return (false, "Account locked due to multiple attempts", null);
             }
-            return (false, "Contraseña incorrecta", null);
+            return (false, "Incorrect password", null);
         }
 
         // Generar token
@@ -59,7 +59,7 @@ public class AuthService
         user.LockoutEnd = null;
         await _context.SaveChangesAsync();
 
-        return (true, "Autenticación exitosa", token);
+        return (true, "Authentication successful", token);
     }
 
     public async Task<bool> ValidateTokenAsync(string token)
@@ -149,13 +149,13 @@ public class AuthService
         // Validar longitud de contraseña
         if (password.Length < LONGITUD_MIN_PASSWORD)
         {
-            return (false, $"La contraseña debe tener al menos {LONGITUD_MIN_PASSWORD} caracteres");
+            return (false, $"Password must be at least {LONGITUD_MIN_PASSWORD} characters long");
         }
 
         // Verificar si el usuario ya existe
         if (await _context.Users.AnyAsync(u => u.Username == username))
         {
-            return (false, "El nombre de usuario ya está en uso");
+            return (false, "Username is already taken");
         }
 
         // Generar salt y hash de la contraseña
@@ -174,6 +174,6 @@ public class AuthService
         await _context.Users.AddAsync(user);
         await _context.SaveChangesAsync();
 
-        return (true, "Usuario registrado exitosamente");
+        return (true, "User successfully registered");
     }
 } 

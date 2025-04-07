@@ -1,5 +1,7 @@
 using Backend.Services;
+using Backend.Models;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace Backend.Controllers;
 
@@ -8,50 +10,84 @@ namespace Backend.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly AuthService _authService;
+    private readonly ILogger<AuthController> _logger;
 
-    public AuthController(AuthService authService)
+    public AuthController(AuthService authService, ILogger<AuthController> logger)
     {
         _authService = authService;
+        _logger = logger;
     }
 
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterRequest request)
     {
-        var result = await _authService.RegisterUserAsync(request.Username, request.Password);
-        if (!result.success)
+        try
         {
-            return BadRequest(new { message = result.message });
+            var result = await _authService.RegisterUserAsync(request.Username, request.Password);
+            if (!result.success)
+            {
+                return BadRequest(new { message = result.message });
+            }
+            return Ok(new { message = result.message });
         }
-        return Ok(new { message = result.message });
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error during registration");
+            return StatusCode(500, new { message = "Internal server error during registration" });
+        }
     }
 
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {
-        var result = await _authService.AuthenticateAsync(request.Username, request.Password);
-        if (!result.success)
+        try
         {
-            return BadRequest(new { message = result.message });
+            var result = await _authService.AuthenticateAsync(request.Username, request.Password);
+            if (!result.success)
+            {
+                return BadRequest(new { message = result.message });
+            }
+            return Ok(new { message = "Authentication successful", token = result.token });
         }
-        return Ok(new { token = result.token, message = result.message });
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error during login");
+            return StatusCode(500, new { message = "Internal server error during login" });
+        }
     }
 
     [HttpPost("logout")]
     public async Task<IActionResult> Logout([FromBody] LogoutRequest request)
     {
-        var result = await _authService.LogoutAsync(request.Token);
-        if (!result)
+        try
         {
-            return BadRequest(new { message = "Token inválido o expirado" });
+            var result = await _authService.LogoutAsync(request.Token);
+            if (!result)
+            {
+                return BadRequest(new { message = "Invalid or expired token" });
+            }
+            return Ok(new { message = "Successfully logged out" });
         }
-        return Ok(new { message = "Sesión cerrada exitosamente" });
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error during logout");
+            return StatusCode(500, new { message = "Internal server error during logout" });
+        }
     }
 
     [HttpPost("validate")]
     public async Task<IActionResult> ValidateToken([FromBody] ValidateTokenRequest request)
     {
-        var isValid = await _authService.ValidateTokenAsync(request.Token);
-        return Ok(new { isValid });
+        try
+        {
+            var isValid = await _authService.ValidateTokenAsync(request.Token);
+            return Ok(new { isValid });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error during token validation");
+            return StatusCode(500, new { message = "Internal server error during token validation" });
+        }
     }
 }
 

@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using Backend.Models;
 using Backend.Tests.Models;
 using Microsoft.AspNetCore.Mvc.Testing;
 using System.Text.Json;
@@ -35,7 +36,14 @@ public class LoginCombinationsTests : IClassFixture<TestWebApplicationFactory>
 
         // Act - Intentamos hacer login
         var loginRequest = new LoginRequest(username, password);
+        Console.WriteLine($"Sending login request for {username}");
         var response = await _client.PostAsJsonAsync("/api/auth/login", loginRequest);
+        var responseString = await response.Content.ReadAsStringAsync();
+        Console.WriteLine($"Response status: {response.StatusCode}");
+        Console.WriteLine($"Response content for {username}: {responseString}");
+        Console.WriteLine($"Content type: {response.Content.Headers.ContentType}");
+        Console.WriteLine($"Content length: {responseString.Length}");
+        Console.WriteLine($"First character code: {(int)responseString[0]}");
         var content = await response.Content.ReadFromJsonAsync<AuthResponse>(_jsonOptions);
 
         // Assert
@@ -59,7 +67,7 @@ public class LoginCombinationsTests : IClassFixture<TestWebApplicationFactory>
 
         Assert.Equal(HttpStatusCode.OK, logoutResponse.StatusCode);
         Assert.NotNull(logoutContent);
-        Assert.Equal("Sesión cerrada exitosamente", logoutContent.Message);
+        Assert.Equal("Successfully logged out", logoutContent.Message);
     }
 
     [Theory]
@@ -76,12 +84,14 @@ public class LoginCombinationsTests : IClassFixture<TestWebApplicationFactory>
         // Act - Intentamos hacer login con la contraseña incorrecta
         var loginRequest = new LoginRequest(username, wrongPassword);
         var response = await _client.PostAsJsonAsync("/api/auth/login", loginRequest);
+        var responseString = await response.Content.ReadAsStringAsync();
+        Console.WriteLine($"Response content for {username}: {responseString}");
         var content = await response.Content.ReadFromJsonAsync<AuthResponse>(_jsonOptions);
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.NotNull(content);
-        Assert.Equal("Contraseña incorrecta", content.Message);
+        Assert.Equal("Incorrect password", content.Message);
     }
 
     [Theory]
@@ -104,11 +114,13 @@ public class LoginCombinationsTests : IClassFixture<TestWebApplicationFactory>
         }
 
         var response = await _client.PostAsJsonAsync("/api/auth/login", loginRequest);
+        var responseString = await response.Content.ReadAsStringAsync();
+        Console.WriteLine($"Response content for {username}: {responseString}");
         var content = await response.Content.ReadFromJsonAsync<AuthResponse>(_jsonOptions);
 
         // Assert
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.NotNull(content);
-        Assert.Equal("Usuario bloqueado temporalmente", content.Message);
+        Assert.Equal("Account temporarily locked", content.Message);
     }
 } 

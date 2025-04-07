@@ -13,7 +13,7 @@ namespace Backend.Tests;
 
 public class TestWebApplicationFactory : WebApplicationFactory<Program>
 {
-    private static readonly string ConnectionString = "DataSource=:memory:;Cache=Shared";
+    private static readonly string ConnectionString = "DataSource=:memory:;Cache=Shared;Mode=ReadWriteCreate;Pooling=false";
     private static readonly SqliteConnection _connection;
     private static readonly object _lock = new object();
     private bool _disposed;
@@ -58,13 +58,13 @@ public class TestWebApplicationFactory : WebApplicationFactory<Program>
                 services.Remove(descriptor);
             }
 
-            // Configurar el DbContext para usar SQLite en memoria
+            // Configurar el DbContext para usar SQLite en memoria con conexión compartida
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlite(_connection)
                        .EnableSensitiveDataLogging(false)
                        .LogTo(_ => { }, LogLevel.Error); // Solo logs de error
-            });
+            }, ServiceLifetime.Scoped);
 
             // Registrar otros servicios necesarios
             services.AddScoped<AuthService>();
@@ -85,11 +85,14 @@ public class TestWebApplicationFactory : WebApplicationFactory<Program>
                     {
                         // Limpiar datos existentes
                         db.Database.ExecuteSqlRaw("DELETE FROM Users");
+                        db.SaveChanges();
 
-                        // Crear usuarios de prueba
-                        authService.RegisterUserAsync("admin", "admin123").Wait();
-                        authService.RegisterUserAsync("profesor", "matematicas2024").Wait();
-                        authService.RegisterUserAsync("estudiante", "calculo2024!").Wait();
+                        // Crear usuarios de prueba de manera sincrónica para evitar problemas de concurrencia
+                        authService.RegisterUserAsync("admin", "admin123").GetAwaiter().GetResult();
+                        authService.RegisterUserAsync("profesor", "matematicas2024").GetAwaiter().GetResult();
+                        authService.RegisterUserAsync("estudiante", "calculo2024!").GetAwaiter().GetResult();
+                        
+                        db.SaveChanges();
                     }
                 }
                 catch (Exception ex)
@@ -108,7 +111,7 @@ public class TestWebApplicationFactory : WebApplicationFactory<Program>
         {
             if (disposing)
             {
-                // No cerramos la conexión aquí ya que es estática
+                // No cerramos la conexión aquí ya que es estática y la compartimos entre pruebas
             }
 
             _disposed = true;

@@ -1,0 +1,191 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TestRun id="68be6e44-2b17-4e73-be65-e9248ab9e698" name="salva@MINIPC 2025-04-06 19:54:44" runUser="MINIPC\salva" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Times creation="2025-04-06T19:54:44.2311399-06:00" queuing="2025-04-06T19:54:44.2311406-06:00" start="2025-04-06T19:54:42.2636431-06:00" finish="2025-04-06T19:54:44.3195670-06:00" />
+  <TestSettings name="default" id="9a5a69e8-d553-4211-81a6-160cadf6bedc">
+    <Deployment runDeploymentRoot="salva_MINIPC_2025-04-06_19_54_44" />
+  </TestSettings>
+  <Results>
+    <UnitTestResult executionId="8db0fcf3-9d37-48a4-9036-ec350d607a3a" testId="2e3a5dbc-2537-57a3-5210-0e908d17e4a5" testName="Backend.Tests.LoginCombinationsTests.Login_WithIncorrectPasswords_ShouldFail(username: &quot;profesor&quot;, wrongPassword: &quot;wrong123&quot;)" computerName="MINIPC" duration="00:00:00.0060528" startTime="2025-04-06T19:54:44.1211150-06:00" endTime="2025-04-06T19:54:44.1211152-06:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8db0fcf3-9d37-48a4-9036-ec350d607a3a" />
+    <UnitTestResult executionId="d820a370-4484-4cb7-a24c-e22bf0028d79" testId="c73146d0-8d65-593a-c0d2-b45d8f68d8b9" testName="Backend.Tests.LoginCombinationsTests.Login_WithIncorrectPasswords_ShouldFail(username: &quot;estudiante&quot;, wrongPassword: &quot;invalid!&quot;)" computerName="MINIPC" duration="00:00:00.0024035" startTime="2025-04-06T19:54:44.1236043-06:00" endTime="2025-04-06T19:54:44.1236044-06:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d820a370-4484-4cb7-a24c-e22bf0028d79" />
+    <UnitTestResult executionId="5d96774c-d3f0-45f5-9149-b2b31c632b4e" testId="33f9270d-bcde-89aa-8c5c-f9dd81c5cd9e" testName="Backend.Tests.LoginCombinationsTests.Login_WithDifferentCredentials_ShouldBehaveCorrectly(username: &quot;profesor&quot;, password: &quot;matematicas2024&quot;, role: &quot;Profesor&quot;)" computerName="MINIPC" duration="00:00:00.0068630" startTime="2025-04-06T19:54:44.2181179-06:00" endTime="2025-04-06T19:54:44.2181182-06:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5d96774c-d3f0-45f5-9149-b2b31c632b4e" />
+    <UnitTestResult executionId="0f3b5daf-ca85-470e-86ef-fe8e95724e5a" testId="09e79c35-2cf1-92ed-1d39-3da1a84da89b" testName="Backend.Tests.LoginCombinationsTests.Login_WithTooManyAttempts_ShouldLockAccount(username: &quot;estudiante&quot;)" computerName="MINIPC" duration="00:00:00.0093638" startTime="2025-04-06T19:54:44.2553867-06:00" endTime="2025-04-06T19:54:44.2553868-06:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="0f3b5daf-ca85-470e-86ef-fe8e95724e5a" />
+    <UnitTestResult executionId="16899134-be17-4bbf-a5e7-7c3b6914e47d" testId="f2b7f8e7-6c44-5b44-b2dc-5cf99c6f6337" testName="Backend.Tests.LoginCombinationsTests.Login_WithDifferentCredentials_ShouldBehaveCorrectly(username: &quot;admin&quot;, password: &quot;admin123&quot;, role: &quot;Administrador&quot;)" computerName="MINIPC" duration="00:00:00.0067792" startTime="2025-04-06T19:54:44.2249808-06:00" endTime="2025-04-06T19:54:44.2249810-06:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="16899134-be17-4bbf-a5e7-7c3b6914e47d" />
+    <UnitTestResult executionId="286d0b03-7126-48fd-8a52-06d260728229" testId="11b469e1-49d2-64fa-e22e-39a97a38e640" testName="Backend.Tests.LoginCombinationsTests.Login_WithTooManyAttempts_ShouldLockAccount(username: &quot;profesor&quot;)" computerName="MINIPC" duration="00:00:00.0086366" startTime="2025-04-06T19:54:44.2459226-06:00" endTime="2025-04-06T19:54:44.2459227-06:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="286d0b03-7126-48fd-8a52-06d260728229" />
+    <UnitTestResult executionId="12cbc70d-5822-41e1-87de-2fdf2b0ecbeb" testId="c0b34917-4ec4-5b6e-536f-43b6fbe170a6" testName="Backend.Tests.LoginCombinationsTests.Login_WithDifferentCredentials_ShouldBehaveCorrectly(username: &quot;estudiante&quot;, password: &quot;calculo2024!&quot;, role: &quot;Estudiante&quot;)" computerName="MINIPC" duration="00:00:00.0874458" startTime="2025-04-06T19:54:44.2133285-06:00" endTime="2025-04-06T19:54:44.2133286-06:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="12cbc70d-5822-41e1-87de-2fdf2b0ecbeb" />
+    <UnitTestResult executionId="4daad9e7-d71b-4058-ae89-aa027e15eceb" testId="82f0aaba-50d5-40c3-a472-74746e49341d" testName="Backend.Tests.AuthControllerTests.ValidateToken_WithInvalidToken_ShouldReturnFalse" computerName="MINIPC" duration="00:00:00.0485492" startTime="2025-04-06T19:54:44.1999766-06:00" endTime="2025-04-06T19:54:44.1999768-06:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="4daad9e7-d71b-4058-ae89-aa027e15eceb" />
+    <UnitTestResult executionId="effa9633-bfc1-44c1-b55e-0bc99036e365" testId="26c5f488-6ab6-9c5f-9770-4b127f94fc4e" testName="Backend.Tests.LoginCombinationsTests.Login_WithTooManyAttempts_ShouldLockAccount(username: &quot;admin&quot;)" computerName="MINIPC" duration="00:00:00.0120782" startTime="2025-04-06T19:54:44.2371810-06:00" endTime="2025-04-06T19:54:44.2371812-06:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="effa9633-bfc1-44c1-b55e-0bc99036e365" />
+    <UnitTestResult executionId="b2e625df-816d-45a0-ab84-c490bd49b5e3" testId="98014515-362a-e99a-ac78-2bd2854424bf" testName="Backend.Tests.AuthControllerTests.Login_WithValidCredentials_ShouldSucceed" computerName="MINIPC" duration="00:00:00.0053648" startTime="2025-04-06T19:54:44.1512920-06:00" endTime="2025-04-06T19:54:44.1512922-06:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b2e625df-816d-45a0-ab84-c490bd49b5e3" />
+    <UnitTestResult executionId="c121468f-b63a-44c8-abc4-4b714153a62e" testId="9cd29d68-1a60-d7db-e89d-640eb05d6f6a" testName="Backend.Tests.AuthControllerTests.Logout_WithValidToken_ShouldSucceed" computerName="MINIPC" duration="00:00:00.0183784" startTime="2025-04-06T19:54:44.1498208-06:00" endTime="2025-04-06T19:54:44.1498210-06:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="c121468f-b63a-44c8-abc4-4b714153a62e">
+      <Output>
+        <ErrorInfo>
+          <Message>Assert.Equal() Failure: Values differ&#xD;
+Expected: OK&#xD;
+Actual:   BadRequest</Message>
+          <StackTrace>   at Backend.Tests.AuthControllerTests.Logout_WithValidToken_ShouldSucceed() in C:\Code\iPhoneISUMatematicas\Backend.Tests\AuthControllerTests.cs:line 166&#xD;
+--- End of stack trace from previous location ---</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="f3820346-ab2b-420b-b93e-f2eeb6a66ca4" testId="dd5ceaa8-716e-b3b6-1920-abe72195e762" testName="Backend.Tests.AuthControllerTests.Register_WithExistingUsername_ShouldFail" computerName="MINIPC" duration="00:00:00.0037746" startTime="2025-04-06T19:54:44.2133467-06:00" endTime="2025-04-06T19:54:44.2133467-06:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f3820346-ab2b-420b-b93e-f2eeb6a66ca4" />
+    <UnitTestResult executionId="e9e596da-8927-46ca-b749-ba0d4f9ae726" testId="e2f3e5f6-9aaf-e2d8-05a0-5e85432316e5" testName="Backend.Tests.AuthControllerTests.Login_WithInvalidCredentials_ShouldFail" computerName="MINIPC" duration="00:00:00.0017958" startTime="2025-04-06T19:54:44.2147942-06:00" endTime="2025-04-06T19:54:44.2147944-06:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e9e596da-8927-46ca-b749-ba0d4f9ae726" />
+    <UnitTestResult executionId="f18f55c6-d5e9-4e2d-a0b9-60f15d349001" testId="bd36e397-d2d8-6ace-f09b-46623003146e" testName="Backend.Tests.AuthControllerTests.Register_WithShortPassword_ShouldFail" computerName="MINIPC" duration="00:00:00.0090303" startTime="2025-04-06T19:54:44.2239446-06:00" endTime="2025-04-06T19:54:44.2239448-06:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="f18f55c6-d5e9-4e2d-a0b9-60f15d349001" />
+    <UnitTestResult executionId="332aa569-ab70-44d6-97c9-f841ce6fa2fa" testId="973b7e7e-78ff-3ca8-eda1-06cf11ea31fe" testName="Backend.Tests.AuthControllerTests.ValidateToken_WithValidToken_ShouldReturnTrue" computerName="MINIPC" duration="00:00:00.0057222" startTime="2025-04-06T19:54:44.2058153-06:00" endTime="2025-04-06T19:54:44.2058155-06:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="332aa569-ab70-44d6-97c9-f841ce6fa2fa" />
+    <UnitTestResult executionId="91ce51f3-1d4d-4d70-91b0-aeda638d2baa" testId="e302c547-6556-624d-38e4-187616bedd00" testName="Backend.Tests.AuthControllerTests.Login_WithTooManyAttempts_ShouldLockAccount" computerName="MINIPC" duration="00:00:00.8015728" startTime="2025-04-06T19:54:44.1183189-06:00" endTime="2025-04-06T19:54:44.1183190-06:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="91ce51f3-1d4d-4d70-91b0-aeda638d2baa" />
+    <UnitTestResult executionId="9d51b2f0-0135-42a0-a960-a73250bbd5c1" testId="92e1543b-a48c-18b9-e1c2-41c18fb3f8ff" testName="Backend.Tests.LoginCombinationsTests.Login_WithIncorrectPasswords_ShouldFail(username: &quot;admin&quot;, wrongPassword: &quot;wrongpass&quot;)" computerName="MINIPC" duration="00:00:00.7954360" startTime="2025-04-06T19:54:44.1152235-06:00" endTime="2025-04-06T19:54:44.1152439-06:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="9d51b2f0-0135-42a0-a960-a73250bbd5c1" />
+    <UnitTestResult executionId="ceaecdd9-11f5-41ff-b02e-d2e7c66d3e39" testId="8d880930-b2ab-7181-4f38-898b717f90b3" testName="Backend.Tests.AuthControllerTests.Register_WithValidData_ShouldSucceed" computerName="MINIPC" duration="00:00:00.0030472" startTime="2025-04-06T19:54:44.2132931-06:00" endTime="2025-04-06T19:54:44.2132932-06:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ceaecdd9-11f5-41ff-b02e-d2e7c66d3e39" />
+  </Results>
+  <TestDefinitions>
+    <UnitTest name="Backend.Tests.LoginCombinationsTests.Login_WithIncorrectPasswords_ShouldFail(username: &quot;profesor&quot;, wrongPassword: &quot;wrong123&quot;)" storage="c:\code\iphoneisumatematicas\backend.tests\bin\debug\net8.0\backend.tests.dll" id="2e3a5dbc-2537-57a3-5210-0e908d17e4a5">
+      <Execution id="8db0fcf3-9d37-48a4-9036-ec350d607a3a" />
+      <TestMethod codeBase="C:\Code\iPhoneISUMatematicas\Backend.Tests\bin\Debug\net8.0\Backend.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Backend.Tests.LoginCombinationsTests" name="Login_WithIncorrectPasswords_ShouldFail" />
+    </UnitTest>
+    <UnitTest name="Backend.Tests.AuthControllerTests.ValidateToken_WithInvalidToken_ShouldReturnFalse" storage="c:\code\iphoneisumatematicas\backend.tests\bin\debug\net8.0\backend.tests.dll" id="82f0aaba-50d5-40c3-a472-74746e49341d">
+      <Execution id="4daad9e7-d71b-4058-ae89-aa027e15eceb" />
+      <TestMethod codeBase="C:\Code\iPhoneISUMatematicas\Backend.Tests\bin\Debug\net8.0\Backend.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Backend.Tests.AuthControllerTests" name="ValidateToken_WithInvalidToken_ShouldReturnFalse" />
+    </UnitTest>
+    <UnitTest name="Backend.Tests.AuthControllerTests.Login_WithInvalidCredentials_ShouldFail" storage="c:\code\iphoneisumatematicas\backend.tests\bin\debug\net8.0\backend.tests.dll" id="e2f3e5f6-9aaf-e2d8-05a0-5e85432316e5">
+      <Execution id="e9e596da-8927-46ca-b749-ba0d4f9ae726" />
+      <TestMethod codeBase="C:\Code\iPhoneISUMatematicas\Backend.Tests\bin\Debug\net8.0\Backend.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Backend.Tests.AuthControllerTests" name="Login_WithInvalidCredentials_ShouldFail" />
+    </UnitTest>
+    <UnitTest name="Backend.Tests.AuthControllerTests.Register_WithValidData_ShouldSucceed" storage="c:\code\iphoneisumatematicas\backend.tests\bin\debug\net8.0\backend.tests.dll" id="8d880930-b2ab-7181-4f38-898b717f90b3">
+      <Execution id="ceaecdd9-11f5-41ff-b02e-d2e7c66d3e39" />
+      <TestMethod codeBase="C:\Code\iPhoneISUMatematicas\Backend.Tests\bin\Debug\net8.0\Backend.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Backend.Tests.AuthControllerTests" name="Register_WithValidData_ShouldSucceed" />
+    </UnitTest>
+    <UnitTest name="Backend.Tests.LoginCombinationsTests.Login_WithDifferentCredentials_ShouldBehaveCorrectly(username: &quot;estudiante&quot;, password: &quot;calculo2024!&quot;, role: &quot;Estudiante&quot;)" storage="c:\code\iphoneisumatematicas\backend.tests\bin\debug\net8.0\backend.tests.dll" id="c0b34917-4ec4-5b6e-536f-43b6fbe170a6">
+      <Execution id="12cbc70d-5822-41e1-87de-2fdf2b0ecbeb" />
+      <TestMethod codeBase="C:\Code\iPhoneISUMatematicas\Backend.Tests\bin\Debug\net8.0\Backend.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Backend.Tests.LoginCombinationsTests" name="Login_WithDifferentCredentials_ShouldBehaveCorrectly" />
+    </UnitTest>
+    <UnitTest name="Backend.Tests.LoginCombinationsTests.Login_WithIncorrectPasswords_ShouldFail(username: &quot;estudiante&quot;, wrongPassword: &quot;invalid!&quot;)" storage="c:\code\iphoneisumatematicas\backend.tests\bin\debug\net8.0\backend.tests.dll" id="c73146d0-8d65-593a-c0d2-b45d8f68d8b9">
+      <Execution id="d820a370-4484-4cb7-a24c-e22bf0028d79" />
+      <TestMethod codeBase="C:\Code\iPhoneISUMatematicas\Backend.Tests\bin\Debug\net8.0\Backend.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Backend.Tests.LoginCombinationsTests" name="Login_WithIncorrectPasswords_ShouldFail" />
+    </UnitTest>
+    <UnitTest name="Backend.Tests.LoginCombinationsTests.Login_WithTooManyAttempts_ShouldLockAccount(username: &quot;profesor&quot;)" storage="c:\code\iphoneisumatematicas\backend.tests\bin\debug\net8.0\backend.tests.dll" id="11b469e1-49d2-64fa-e22e-39a97a38e640">
+      <Execution id="286d0b03-7126-48fd-8a52-06d260728229" />
+      <TestMethod codeBase="C:\Code\iPhoneISUMatematicas\Backend.Tests\bin\Debug\net8.0\Backend.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Backend.Tests.LoginCombinationsTests" name="Login_WithTooManyAttempts_ShouldLockAccount" />
+    </UnitTest>
+    <UnitTest name="Backend.Tests.AuthControllerTests.Register_WithExistingUsername_ShouldFail" storage="c:\code\iphoneisumatematicas\backend.tests\bin\debug\net8.0\backend.tests.dll" id="dd5ceaa8-716e-b3b6-1920-abe72195e762">
+      <Execution id="f3820346-ab2b-420b-b93e-f2eeb6a66ca4" />
+      <TestMethod codeBase="C:\Code\iPhoneISUMatematicas\Backend.Tests\bin\Debug\net8.0\Backend.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Backend.Tests.AuthControllerTests" name="Register_WithExistingUsername_ShouldFail" />
+    </UnitTest>
+    <UnitTest name="Backend.Tests.LoginCombinationsTests.Login_WithTooManyAttempts_ShouldLockAccount(username: &quot;estudiante&quot;)" storage="c:\code\iphoneisumatematicas\backend.tests\bin\debug\net8.0\backend.tests.dll" id="09e79c35-2cf1-92ed-1d39-3da1a84da89b">
+      <Execution id="0f3b5daf-ca85-470e-86ef-fe8e95724e5a" />
+      <TestMethod codeBase="C:\Code\iPhoneISUMatematicas\Backend.Tests\bin\Debug\net8.0\Backend.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Backend.Tests.LoginCombinationsTests" name="Login_WithTooManyAttempts_ShouldLockAccount" />
+    </UnitTest>
+    <UnitTest name="Backend.Tests.LoginCombinationsTests.Login_WithDifferentCredentials_ShouldBehaveCorrectly(username: &quot;profesor&quot;, password: &quot;matematicas2024&quot;, role: &quot;Profesor&quot;)" storage="c:\code\iphoneisumatematicas\backend.tests\bin\debug\net8.0\backend.tests.dll" id="33f9270d-bcde-89aa-8c5c-f9dd81c5cd9e">
+      <Execution id="5d96774c-d3f0-45f5-9149-b2b31c632b4e" />
+      <TestMethod codeBase="C:\Code\iPhoneISUMatematicas\Backend.Tests\bin\Debug\net8.0\Backend.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Backend.Tests.LoginCombinationsTests" name="Login_WithDifferentCredentials_ShouldBehaveCorrectly" />
+    </UnitTest>
+    <UnitTest name="Backend.Tests.LoginCombinationsTests.Login_WithIncorrectPasswords_ShouldFail(username: &quot;admin&quot;, wrongPassword: &quot;wrongpass&quot;)" storage="c:\code\iphoneisumatematicas\backend.tests\bin\debug\net8.0\backend.tests.dll" id="92e1543b-a48c-18b9-e1c2-41c18fb3f8ff">
+      <Execution id="9d51b2f0-0135-42a0-a960-a73250bbd5c1" />
+      <TestMethod codeBase="C:\Code\iPhoneISUMatematicas\Backend.Tests\bin\Debug\net8.0\Backend.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Backend.Tests.LoginCombinationsTests" name="Login_WithIncorrectPasswords_ShouldFail" />
+    </UnitTest>
+    <UnitTest name="Backend.Tests.AuthControllerTests.Login_WithTooManyAttempts_ShouldLockAccount" storage="c:\code\iphoneisumatematicas\backend.tests\bin\debug\net8.0\backend.tests.dll" id="e302c547-6556-624d-38e4-187616bedd00">
+      <Execution id="91ce51f3-1d4d-4d70-91b0-aeda638d2baa" />
+      <TestMethod codeBase="C:\Code\iPhoneISUMatematicas\Backend.Tests\bin\Debug\net8.0\Backend.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Backend.Tests.AuthControllerTests" name="Login_WithTooManyAttempts_ShouldLockAccount" />
+    </UnitTest>
+    <UnitTest name="Backend.Tests.AuthControllerTests.Register_WithShortPassword_ShouldFail" storage="c:\code\iphoneisumatematicas\backend.tests\bin\debug\net8.0\backend.tests.dll" id="bd36e397-d2d8-6ace-f09b-46623003146e">
+      <Execution id="f18f55c6-d5e9-4e2d-a0b9-60f15d349001" />
+      <TestMethod codeBase="C:\Code\iPhoneISUMatematicas\Backend.Tests\bin\Debug\net8.0\Backend.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Backend.Tests.AuthControllerTests" name="Register_WithShortPassword_ShouldFail" />
+    </UnitTest>
+    <UnitTest name="Backend.Tests.LoginCombinationsTests.Login_WithDifferentCredentials_ShouldBehaveCorrectly(username: &quot;admin&quot;, password: &quot;admin123&quot;, role: &quot;Administrador&quot;)" storage="c:\code\iphoneisumatematicas\backend.tests\bin\debug\net8.0\backend.tests.dll" id="f2b7f8e7-6c44-5b44-b2dc-5cf99c6f6337">
+      <Execution id="16899134-be17-4bbf-a5e7-7c3b6914e47d" />
+      <TestMethod codeBase="C:\Code\iPhoneISUMatematicas\Backend.Tests\bin\Debug\net8.0\Backend.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Backend.Tests.LoginCombinationsTests" name="Login_WithDifferentCredentials_ShouldBehaveCorrectly" />
+    </UnitTest>
+    <UnitTest name="Backend.Tests.AuthControllerTests.ValidateToken_WithValidToken_ShouldReturnTrue" storage="c:\code\iphoneisumatematicas\backend.tests\bin\debug\net8.0\backend.tests.dll" id="973b7e7e-78ff-3ca8-eda1-06cf11ea31fe">
+      <Execution id="332aa569-ab70-44d6-97c9-f841ce6fa2fa" />
+      <TestMethod codeBase="C:\Code\iPhoneISUMatematicas\Backend.Tests\bin\Debug\net8.0\Backend.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Backend.Tests.AuthControllerTests" name="ValidateToken_WithValidToken_ShouldReturnTrue" />
+    </UnitTest>
+    <UnitTest name="Backend.Tests.LoginCombinationsTests.Login_WithTooManyAttempts_ShouldLockAccount(username: &quot;admin&quot;)" storage="c:\code\iphoneisumatematicas\backend.tests\bin\debug\net8.0\backend.tests.dll" id="26c5f488-6ab6-9c5f-9770-4b127f94fc4e">
+      <Execution id="effa9633-bfc1-44c1-b55e-0bc99036e365" />
+      <TestMethod codeBase="C:\Code\iPhoneISUMatematicas\Backend.Tests\bin\Debug\net8.0\Backend.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Backend.Tests.LoginCombinationsTests" name="Login_WithTooManyAttempts_ShouldLockAccount" />
+    </UnitTest>
+    <UnitTest name="Backend.Tests.AuthControllerTests.Login_WithValidCredentials_ShouldSucceed" storage="c:\code\iphoneisumatematicas\backend.tests\bin\debug\net8.0\backend.tests.dll" id="98014515-362a-e99a-ac78-2bd2854424bf">
+      <Execution id="b2e625df-816d-45a0-ab84-c490bd49b5e3" />
+      <TestMethod codeBase="C:\Code\iPhoneISUMatematicas\Backend.Tests\bin\Debug\net8.0\Backend.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Backend.Tests.AuthControllerTests" name="Login_WithValidCredentials_ShouldSucceed" />
+    </UnitTest>
+    <UnitTest name="Backend.Tests.AuthControllerTests.Logout_WithValidToken_ShouldSucceed" storage="c:\code\iphoneisumatematicas\backend.tests\bin\debug\net8.0\backend.tests.dll" id="9cd29d68-1a60-d7db-e89d-640eb05d6f6a">
+      <Execution id="c121468f-b63a-44c8-abc4-4b714153a62e" />
+      <TestMethod codeBase="C:\Code\iPhoneISUMatematicas\Backend.Tests\bin\Debug\net8.0\Backend.Tests.dll" adapterTypeName="executor://xunit/VsTestRunner2/netcoreapp" className="Backend.Tests.AuthControllerTests" name="Logout_WithValidToken_ShouldSucceed" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestEntries>
+    <TestEntry testId="2e3a5dbc-2537-57a3-5210-0e908d17e4a5" executionId="8db0fcf3-9d37-48a4-9036-ec350d607a3a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c73146d0-8d65-593a-c0d2-b45d8f68d8b9" executionId="d820a370-4484-4cb7-a24c-e22bf0028d79" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="33f9270d-bcde-89aa-8c5c-f9dd81c5cd9e" executionId="5d96774c-d3f0-45f5-9149-b2b31c632b4e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="09e79c35-2cf1-92ed-1d39-3da1a84da89b" executionId="0f3b5daf-ca85-470e-86ef-fe8e95724e5a" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f2b7f8e7-6c44-5b44-b2dc-5cf99c6f6337" executionId="16899134-be17-4bbf-a5e7-7c3b6914e47d" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="11b469e1-49d2-64fa-e22e-39a97a38e640" executionId="286d0b03-7126-48fd-8a52-06d260728229" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c0b34917-4ec4-5b6e-536f-43b6fbe170a6" executionId="12cbc70d-5822-41e1-87de-2fdf2b0ecbeb" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="82f0aaba-50d5-40c3-a472-74746e49341d" executionId="4daad9e7-d71b-4058-ae89-aa027e15eceb" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="26c5f488-6ab6-9c5f-9770-4b127f94fc4e" executionId="effa9633-bfc1-44c1-b55e-0bc99036e365" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="98014515-362a-e99a-ac78-2bd2854424bf" executionId="b2e625df-816d-45a0-ab84-c490bd49b5e3" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="9cd29d68-1a60-d7db-e89d-640eb05d6f6a" executionId="c121468f-b63a-44c8-abc4-4b714153a62e" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="dd5ceaa8-716e-b3b6-1920-abe72195e762" executionId="f3820346-ab2b-420b-b93e-f2eeb6a66ca4" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e2f3e5f6-9aaf-e2d8-05a0-5e85432316e5" executionId="e9e596da-8927-46ca-b749-ba0d4f9ae726" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="bd36e397-d2d8-6ace-f09b-46623003146e" executionId="f18f55c6-d5e9-4e2d-a0b9-60f15d349001" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="973b7e7e-78ff-3ca8-eda1-06cf11ea31fe" executionId="332aa569-ab70-44d6-97c9-f841ce6fa2fa" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e302c547-6556-624d-38e4-187616bedd00" executionId="91ce51f3-1d4d-4d70-91b0-aeda638d2baa" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="92e1543b-a48c-18b9-e1c2-41c18fb3f8ff" executionId="9d51b2f0-0135-42a0-a960-a73250bbd5c1" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="8d880930-b2ab-7181-4f38-898b717f90b3" executionId="ceaecdd9-11f5-41ff-b02e-d2e7c66d3e39" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <TestLists>
+    <TestList name="Resultados sin formato de lista" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="Todos los resultados cargados" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <ResultSummary outcome="Failed">
+    <Counters total="18" executed="18" passed="17" failed="1" error="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Output>
+      <StdOut>[xUnit.net 00:00:00.00] xUnit.net VSTest Adapter v2.5.3.1+6b60a9e56a (64-bit .NET 8.0.14)&#xD;
+[xUnit.net 00:00:00.07]   Discovering: Backend.Tests&#xD;
+[xUnit.net 00:00:00.11]   Discovered:  Backend.Tests&#xD;
+[xUnit.net 00:00:00.11]   Starting:    Backend.Tests&#xD;
+Response content for admin: {"message":"Incorrect password"}&#xD;
+Response content for profesor: {"message":"Incorrect password"}&#xD;
+Response content for estudiante: {"message":"Incorrect password"}&#xD;
+Sending login request for estudiante&#xD;
+Logout response status: BadRequest&#xD;
+Logout response content: {"message":"Invalid or expired token"}&#xD;
+Logout content type: application/json; charset=utf-8&#xD;
+Logout content length: 38&#xD;
+First character code: 123&#xD;
+[xUnit.net 00:00:01.50]       Assert.Equal() Failure: Values differ&#xD;
+[xUnit.net 00:00:01.50]       Expected: OK&#xD;
+[xUnit.net 00:00:01.50]       Actual:   BadRequest&#xD;
+Response status: OK&#xD;
+[xUnit.net 00:00:01.50]       Stack Trace:&#xD;
+Response content for estudiante: {"message":"Authentication successful","token":"Ds+hy61bqu3gXQ8e3hp43NTGBCYipTC6AKKZkYg7bes="}&#xD;
+Content type: application/json; charset=utf-8&#xD;
+Content length: 94&#xD;
+First character code: 123&#xD;
+[xUnit.net 00:00:01.50]         C:\Code\iPhoneISUMatematicas\Backend.Tests\AuthControllerTests.cs(166,0): at Backend.Tests.AuthControllerTests.Logout_WithValidToken_ShouldSucceed()&#xD;
+[xUnit.net 00:00:01.50]         --- End of stack trace from previous location ---&#xD;
+Login response: {"message":"Authentication successful","token":"/hXBD7OQg9DqsLV5MNYzfop87LVwKYWk/ckLDgzlbjk="}&#xD;
+Register response: {"message":"User successfully registered"}&#xD;
+Sending login request for profesor&#xD;
+Register (existing) response: {"message":"Username is already taken"}&#xD;
+Response content: {"message":"User not registered"}&#xD;
+Response status: OK&#xD;
+Response content for profesor: {"message":"Authentication successful","token":"YEbNpr6Ip/rOq5rXTKTiaM6dvc12a3lxYuMgAaOhfyM="}&#xD;
+Content type: application/json; charset=utf-8&#xD;
+Content length: 94&#xD;
+First character code: 123&#xD;
+Sending login request for admin&#xD;
+Response status: OK&#xD;
+Response content for admin: {"message":"Authentication successful","token":"2PV981d4eHOo61Q0wafzjC3FhZUYibPTAwYWjbwwMZU="}&#xD;
+Content type: application/json; charset=utf-8&#xD;
+Content length: 94&#xD;
+First character code: 123&#xD;
+Register (short password) response: {"message":"Password must be at least 8 characters long"}&#xD;
+Response content for admin: {"message":"Account temporarily locked"}&#xD;
+Response content for profesor: {"message":"Account temporarily locked"}&#xD;
+Response content for estudiante: {"message":"Account temporarily locked"}&#xD;
+[xUnit.net 00:00:01.61]   Finished:    Backend.Tests&#xD;
+</StdOut>
+    </Output>
+    <RunInfos>
+      <RunInfo computerName="MINIPC" outcome="Error" timestamp="2025-04-06T19:54:44.1482047-06:00">
+        <Text>[xUnit.net 00:00:01.50]     Backend.Tests.AuthControllerTests.Logout_WithValidToken_ShouldSucceed [FAIL]</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+</TestRun>

@@ -9,10 +9,10 @@ namespace Backend.Services;
 public class AuthService
 {
     // Constantes de seguridad
-    private const int MAX_INTENTOS = 4;
-    private const int TIEMPO_BLOQUEO = 600; // segundos
-    private const int LONGITUD_MIN_PASSWORD = 8;
-    private const int TIEMPO_EXPIRACION_TOKEN = 3600; // segundos
+    private const int MAX_LOGINATTEMPS = 4;
+    private const int LOCK_TIME = 600; // segundos
+    private const int PASWWORD_MIN_LENGTH = 8;
+    private const int TOKEN_EXPIRATION_TIME = 3600; // segundos
 
     private readonly ApplicationDbContext _context;
 
@@ -44,9 +44,9 @@ public class AuthService
         if (passwordHash != user.PasswordHash)
         {
             await AddFailedLoginAttempt(user);
-            if (user.FailedLoginAttempts >= MAX_INTENTOS)
+            if (user.FailedLoginAttempts >= MAX_LOGINATTEMPS)
             {
-                user.LockoutEnd = DateTime.UtcNow.AddSeconds(TIEMPO_BLOQUEO);
+                user.LockoutEnd = DateTime.UtcNow.AddSeconds(LOCK_TIME);
                 await _context.SaveChangesAsync();
                 return (false, "Account locked due to multiple attempts", null);
             }
@@ -122,7 +122,7 @@ public class AuthService
             FirstName = user.FirstName ?? "",
             UserRole = user.UserRole ?? "",
             CreatedAt = DateTime.UtcNow,
-            ExpiresAt = DateTime.UtcNow.AddSeconds(TIEMPO_EXPIRACION_TOKEN),
+            ExpiresAt = DateTime.UtcNow.AddSeconds(TOKEN_EXPIRATION_TIME),
         };
 
         await _context.AuthTokens.AddAsync(authToken);
@@ -159,9 +159,9 @@ public class AuthService
     )
     {
         // Validar longitud de contraseña
-        if (password.Length < LONGITUD_MIN_PASSWORD)
+        if (password.Length < PASWWORD_MIN_LENGTH)
         {
-            return (false, $"Password must be at least {LONGITUD_MIN_PASSWORD} characters long");
+            return (false, $"Password must be at least {PASWWORD_MIN_LENGTH} characters long");
         }
 
         // Verificar si el usuario ya existe
@@ -184,7 +184,7 @@ public class AuthService
             LastName = lastName,
             UserRole = userRole ?? "Usuario",
             FailedLoginAttempts = 0,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = DateTime.UtcNow,
         };
 
         await _context.Users.AddAsync(user);

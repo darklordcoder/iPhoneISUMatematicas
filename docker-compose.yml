@@ -5,12 +5,12 @@ services:
     image: darklordcoder/phone-app:latest
     container_name: phone-app-test
     ports:
-      - "8080:8080"
+      - "1515:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:8080
     volumes:
-      - sqlite-data:/app/data
+      - sqlite-data:/app/database
     networks:
       - phone-network
 

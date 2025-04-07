@@ -32,18 +32,19 @@ export const Login = () => {
         body: JSON.stringify({ username, password }),
       });
 
-      const data = await response.json();
+      const data: { message: string; token: string; firstName?: string; lastName?: string; userRole?: string } = await response.json();
 
       if (response.ok) {
         try {
           // Almacenar el token y la información del usuario de forma encriptada
-          encryptionService.storeEncryptedToken({
+          const tokenData: TokenData = {
             token: data.token,
-            firstName: data.firstName || username, // Si no hay firstName, usar username
+            firstName: data.firstName || username,
             lastName: data.lastName || '',
             userRole: data.userRole || 'Usuario'
-          });
+          };
           
+          encryptionService.storeEncryptedToken(tokenData);
           const userData = encryptionService.getDecryptedToken();
           console.log(userData);
 

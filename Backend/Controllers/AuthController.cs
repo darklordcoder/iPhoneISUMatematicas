@@ -2,6 +2,8 @@ using System;
 using Backend.Models;
 using Backend.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Backend.Data;
 
 namespace Backend.Controllers;
 
@@ -11,11 +13,13 @@ public class AuthController : ControllerBase
 {
     private readonly AuthService _authService;
     private readonly ILogger<AuthController> _logger;
+    private readonly ApplicationDbContext _context;
 
-    public AuthController(AuthService authService, ILogger<AuthController> logger)
+    public AuthController(AuthService authService, ILogger<AuthController> logger, ApplicationDbContext context)
     {
         _authService = authService;
         _logger = logger;
+        _context = context;
     }
 
     [HttpPost("register")]
@@ -53,7 +57,19 @@ public class AuthController : ControllerBase
             {
                 return BadRequest(new { message = result.message });
             }
-            return Ok(new { message = "Authentication successful", token = result.token });
+
+            // Obtener el token recién creado con los datos del usuario
+            var authToken = await _context.AuthTokens
+                .Include(t => t.User)
+                .FirstOrDefaultAsync(t => t.Token == result.token);
+
+            return Ok(new { 
+                message = "Authentication successful", 
+                token = result.token,
+                firstName = authToken?.FirstName,
+                lastName = authToken?.LastName,
+                userRole = authToken?.UserRole
+            });
         }
         catch (Exception ex)
         {

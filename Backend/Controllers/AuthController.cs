@@ -1,7 +1,7 @@
-using Backend.Services;
-using Backend.Models;
-using Microsoft.AspNetCore.Mvc;
 using System;
+using Backend.Models;
+using Backend.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Controllers;
 
@@ -23,7 +23,13 @@ public class AuthController : ControllerBase
     {
         try
         {
-            var result = await _authService.RegisterUserAsync(request.Username, request.Password);
+            var result = await _authService.RegisterUserAsync(
+                request.Username, 
+                request.Password,
+                request.FirstName,
+                request.LastName,
+                request.UserRole
+            );
             if (!result.success)
             {
                 return BadRequest(new { message = result.message });
@@ -86,12 +92,18 @@ public class AuthController : ControllerBase
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error during token validation");
-            return StatusCode(500, new { message = "Internal server error during token validation" });
+            return StatusCode(
+                500,
+                new { message = "Internal server error during token validation" }
+            );
         }
     }
 }
 
-public record RegisterRequest(string Username, string Password);
+public record RegisterRequest(string Username, string Password, string FirstName, string LastName, string UserRole);
+
 public record LoginRequest(string Username, string Password);
+
 public record LogoutRequest(string Token);
-public record ValidateTokenRequest(string Token); 
+
+public record ValidateTokenRequest(string Token);

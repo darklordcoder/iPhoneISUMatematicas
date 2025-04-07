@@ -2,10 +2,17 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import IncomingCall from './IncomingCall';
+import { encryptionService } from '../services/encryptionService';
 
 export const Menu = () => {
   const navigate = useNavigate();
   const [showCall, setShowCall] = useState(false);
+  const userData = encryptionService.getDecryptedToken();
+
+  const handleLogout = () => {
+    encryptionService.removeToken();
+    navigate('/login');
+  };
 
   const menuItems = [
     {
@@ -105,11 +112,11 @@ export const Menu = () => {
         >
           <div className="flex items-center space-x-4">
             <div className="flex items-center justify-center w-16 h-16 text-2xl font-bold text-white bg-blue-500 rounded-full">
-              JD
+              {userData?.firstName?.[0]}{userData?.lastName?.[0]}
             </div>
             <div>
-              <h2 className="text-xl font-semibold">John Doe</h2>
-              <p className="text-gray-500">Usuario Premium</p>
+              <h2 className="text-xl font-semibold">{userData?.firstName} {userData?.lastName}</h2>
+              <p className="text-gray-500">{userData?.userRole}</p>
             </div>
           </div>
         </motion.div>
@@ -172,7 +179,7 @@ export const Menu = () => {
       {/* Botón de cerrar sesión - Parte inferior fija dentro del marco */}
       <div className="p-6 bg-gray-50">
         <motion.button
-          onClick={() => navigate('/login')}
+          onClick={handleLogout}
           className="flex items-center w-full p-3 space-x-3 transition-colors bg-white border border-red-100 shadow-sm rounded-xl active:bg-gray-50"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

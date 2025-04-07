@@ -10,6 +10,7 @@ import Calculator from './components/Calculator';
 import BootScreen from './components/BootScreen';
 import Weather from './components/Weather';
 import { useState } from 'react';
+import { AuthLayout } from './layouts/AuthLayout';
 
 function AnimatedRoutes() {
   const location = useLocation();
@@ -19,12 +20,19 @@ function AnimatedRoutes() {
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/menu" element={<Menu />} />
-        <Route path="/cities" element={<CitiesList />} />
-        <Route path="/programming" element={<ProgrammingLanguages />} />
-        <Route path="/home" element={<HomeScreen />} />
-        <Route path="/calculator" element={<Calculator />} />
-        <Route path="/weather" element={<Weather />} />
+        
+        {/* Rutas protegidas */}
+        <Route element={<AuthLayout />}>
+          <Route path="/menu" element={<Menu />} />
+          <Route path="/cities" element={<CitiesList />} />
+          <Route path="/programming" element={<ProgrammingLanguages />} />
+          <Route path="/home" element={<HomeScreen />} />
+          <Route path="/calculator" element={<Calculator />} />
+          <Route path="/weather" element={<Weather />} />
+        </Route>
+
+        {/* Ruta para manejar URLs no encontradas */}
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </AnimatePresence>
   );

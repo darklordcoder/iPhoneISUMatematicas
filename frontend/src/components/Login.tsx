@@ -2,19 +2,66 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import logo from '../assets/images/7cdb546f-b9fc-4415-89c4-dd673f15cfe7.png';
+import { encryptionService } from '../services/encryptionService';
+
+interface TokenData {
+    token: string;
+    firstName?: string;
+    lastName?: string;
+    userRole?: string;
+}
 
 export const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Login attempt:', { username, password });
-    navigate('/menu');
+    setError('');
+    setIsLoading(true);
+
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        try {
+          // Almacenar el token y la información del usuario de forma encriptada
+          encryptionService.storeEncryptedToken({
+            token: data.token,
+            firstName: data.firstName || username, // Si no hay firstName, usar username
+            lastName: data.lastName || '',
+            userRole: data.userRole || 'Usuario'
+          });
+          
+          const userData = encryptionService.getDecryptedToken();
+          console.log(userData);
+
+          navigate('/menu');
+        } catch (error) {
+          console.error('Error al procesar el token:', error);
+          setError('Error al procesar las credenciales');
+        }
+      } else {
+        setError(data.message || 'Credenciales inválidas');
+      }
+    } catch (err) {
+      console.error('Error al conectar con el servidor:', err);
+      setError('Error al conectar con el servidor');
+    } finally {
+      setIsLoading(false);
+    }
   };
-
-
 
   return (
     <motion.div 
@@ -101,18 +148,29 @@ export const Login = () => {
         {/* Botón de inicio de sesión */}
         <motion.button
           type="submit"
+          disabled={isLoading}
           className="w-full h-11 mt-6
-                  bg-red-900
+                   bg-red-900
                    text-white font-semibold
                    rounded-xl
                    shadow-md
                    active:from-[#3478c9] active:to-[#2d6ab5]
-                   transition-all duration-200"
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
+                   transition-all duration-200
+                   disabled:opacity-50"
+          whileHover={{ scale: isLoading ? 1 : 1.02 }}
+          whileTap={{ scale: isLoading ? 1 : 0.98 }}
         >
-          LOGIN
+          {isLoading ? 'CARGANDO...' : 'LOGIN'}
         </motion.button>
+        {error && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-2xl font-bold text-center text-black-600 animate-bounce"
+          >
+            {error}
+          </motion.div>
+        )}
 
         {/* Enlaces adicionales */}
         <motion.div 

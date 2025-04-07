@@ -8,7 +8,7 @@ dotnet build
 cd ..
 
 :: Iniciar el backend en una nueva ventana
-start "Backend" cmd /k "cd Backend && dotnet run --urls=https://localhost:7168"
+start "Backend" cmd /k "cd Backend && dotnet watch --urls=https://localhost:7168"
 
 :: Esperar más tiempo para que el backend inicie completamente
 echo Esperando que el backend inicie...

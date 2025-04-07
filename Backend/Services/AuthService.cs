@@ -21,7 +21,10 @@ public class AuthService
         _context = context;
     }
 
-    public async Task<(bool success, string message, string? token)> AuthenticateAsync(string username, string password)
+    public async Task<(bool success, string message, string? token)> AuthenticateAsync(
+        string username,
+        string password
+    )
     {
         // Verificar existencia del usuario
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
@@ -52,7 +55,7 @@ public class AuthService
 
         // Generar token
         var token = await GenerateTokenAsync(user);
-        
+
         // Limpiar intentos fallidos
         user.FailedLoginAttempts = 0;
         user.LastLoginAttempt = null;
@@ -64,8 +67,8 @@ public class AuthService
 
     public async Task<bool> ValidateTokenAsync(string token)
     {
-        var authToken = await _context.AuthTokens
-            .Include(t => t.User)
+        var authToken = await _context
+            .AuthTokens.Include(t => t.User)
             .FirstOrDefaultAsync(t => t.Token == token);
 
         if (authToken == null || authToken.IsExpired)
@@ -115,8 +118,11 @@ public class AuthService
         {
             Token = token,
             UserId = user.Id,
+            LastName = user.LastName ?? "",
+            FirstName = user.FirstName ?? "",
+            UserRole = user.UserRole ?? "",
             CreatedAt = DateTime.UtcNow,
-            ExpiresAt = DateTime.UtcNow.AddSeconds(TIEMPO_EXPIRACION_TOKEN)
+            ExpiresAt = DateTime.UtcNow.AddSeconds(TIEMPO_EXPIRACION_TOKEN),
         };
 
         await _context.AuthTokens.AddAsync(authToken);
@@ -144,7 +150,13 @@ public class AuthService
         return Convert.ToBase64String(saltBytes);
     }
 
-    public async Task<(bool success, string message)> RegisterUserAsync(string username, string password)
+    public async Task<(bool success, string message)> RegisterUserAsync(
+        string username,
+        string password,
+        string? firstName = null,
+        string? lastName = null,
+        string? userRole = null
+    )
     {
         // Validar longitud de contraseña
         if (password.Length < LONGITUD_MIN_PASSWORD)
@@ -168,7 +180,11 @@ public class AuthService
             Username = username,
             PasswordHash = passwordHash,
             Salt = salt,
-            FailedLoginAttempts = 0
+            FirstName = firstName,
+            LastName = lastName,
+            UserRole = userRole ?? "Usuario",
+            FailedLoginAttempts = 0,
+            CreatedAt = DateTime.UtcNow
         };
 
         await _context.Users.AddAsync(user);
@@ -176,4 +192,4 @@ public class AuthService
 
         return (true, "User successfully registered");
     }
-} 
+}

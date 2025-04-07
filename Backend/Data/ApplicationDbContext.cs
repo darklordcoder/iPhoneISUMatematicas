@@ -8,9 +8,25 @@ public class ApplicationDbContext : DbContext
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options) 
     {
-        // Asegurar que la base de datos se cree
-        Database.EnsureCreated();
     }
 
     public DbSet<WeatherForecast> WeatherForecasts { get; set; } = null!;
+    public DbSet<User> Users { get; set; } = null!;
+    public DbSet<AuthToken> AuthTokens { get; set; } = null!;
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        // Configurar relaciones y restricciones
+        modelBuilder.Entity<AuthToken>()
+            .HasOne(t => t.User)
+            .WithMany()
+            .HasForeignKey(t => t.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<User>()
+            .HasIndex(u => u.Username)
+            .IsUnique();
+    }
 }

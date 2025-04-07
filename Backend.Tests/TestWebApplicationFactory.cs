@@ -1,0 +1,119 @@
+using Backend.Data;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Backend.Services;
+using Microsoft.Extensions.Logging;
+using Microsoft.Data.Sqlite;
+using System;
+using Microsoft.Extensions.Hosting;
+
+namespace Backend.Tests;
+
+public class TestWebApplicationFactory : WebApplicationFactory<Program>
+{
+    private static readonly string ConnectionString = "DataSource=:memory:;Cache=Shared";
+    private static readonly SqliteConnection _connection;
+    private static readonly object _lock = new object();
+    private bool _disposed;
+
+    static TestWebApplicationFactory()
+    {
+        _connection = new SqliteConnection(ConnectionString);
+        _connection.Open();
+
+        // Crear la base de datos inicialmente
+        using var context = CreateNewContext();
+        context.Database.EnsureCreated();
+    }
+
+    private static ApplicationDbContext CreateNewContext()
+    {
+        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+            .UseSqlite(_connection)
+            .EnableSensitiveDataLogging(false)
+            .LogTo(_ => { }, LogLevel.Error) // Solo logs de error
+            .Options;
+
+        return new ApplicationDbContext(options);
+    }
+
+    protected override void ConfigureWebHost(IWebHostBuilder builder)
+    {
+        builder.ConfigureLogging(logging =>
+        {
+            logging.ClearProviders(); // Eliminar los providers por defecto
+            logging.SetMinimumLevel(LogLevel.Warning); // Solo mostrar warnings y errores
+        });
+
+        builder.ConfigureServices(services =>
+        {
+            // Remover la configuración existente de DbContext
+            var descriptor = services.SingleOrDefault(
+                d => d.ServiceType == typeof(DbContextOptions<ApplicationDbContext>));
+
+            if (descriptor != null)
+            {
+                services.Remove(descriptor);
+            }
+
+            // Configurar el DbContext para usar SQLite en memoria
+            services.AddDbContext<ApplicationDbContext>(options =>
+            {
+                options.UseSqlite(_connection)
+                       .EnableSensitiveDataLogging(false)
+                       .LogTo(_ => { }, LogLevel.Error); // Solo logs de error
+            });
+
+            // Registrar otros servicios necesarios
+            services.AddScoped<AuthService>();
+
+            // Construir el service provider
+            var sp = services.BuildServiceProvider();
+
+            // Crear un scope para obtener el contexto
+            using (var scope = sp.CreateScope())
+            {
+                var scopedServices = scope.ServiceProvider;
+                var db = scopedServices.GetRequiredService<ApplicationDbContext>();
+                var authService = scopedServices.GetRequiredService<AuthService>();
+
+                try
+                {
+                    lock (_lock)
+                    {
+                        // Limpiar datos existentes
+                        db.Database.ExecuteSqlRaw("DELETE FROM Users");
+
+                        // Crear usuarios de prueba
+                        authService.RegisterUserAsync("admin", "admin123").Wait();
+                        authService.RegisterUserAsync("profesor", "matematicas2024").Wait();
+                        authService.RegisterUserAsync("estudiante", "calculo2024!").Wait();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    var logger = scopedServices.GetRequiredService<ILogger<TestWebApplicationFactory>>();
+                    logger.LogError(ex, "Error al inicializar la base de datos de prueba");
+                    throw;
+                }
+            }
+        });
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (!_disposed)
+        {
+            if (disposing)
+            {
+                // No cerramos la conexión aquí ya que es estática
+            }
+
+            _disposed = true;
+        }
+
+        base.Dispose(disposing);
+    }
+} 

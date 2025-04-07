@@ -1,8 +1,8 @@
 using Backend.Controllers;
 using Backend.Data;
 using Backend.Models;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Xunit;
 
 namespace Backend.Tests;
@@ -42,7 +42,7 @@ public class WeatherForecastControllerTests
         {
             Date = DateOnly.FromDateTime(DateTime.Now),
             TemperatureC = 25,
-            Summary = "Test"
+            Summary = "Test",
         };
         context.WeatherForecasts.Add(existingForecast);
         await context.SaveChangesAsync();
@@ -71,7 +71,7 @@ public class WeatherForecastControllerTests
         {
             Date = DateOnly.FromDateTime(DateTime.Now),
             TemperatureC = 30,
-            Summary = "New Test"
+            Summary = "New Test",
         };
 
         // Act
@@ -91,4 +91,4 @@ public class WeatherForecastControllerTests
         Assert.Equal(newForecast.TemperatureC, savedForecast.TemperatureC);
         Assert.Equal(newForecast.Summary, savedForecast.Summary);
     }
-} 
+}

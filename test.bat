@@ -2,6 +2,6 @@
 echo Ejecutando pruebas unitarias...
 
 REM Ejecutar las pruebas y mostrar solo el resultado
-start "" cmd /k "dotnet test Backend.Tests/Backend.Tests.csproj --no-build --logger "console;verbosity=normal""
+start "" cmd /k "dotnet test Backend.Tests/Backend.Tests.csproj --logger "console;verbosity=normal""
 
 echo Pruebas unitarias completadas.

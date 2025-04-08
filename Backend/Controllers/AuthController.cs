@@ -52,9 +52,13 @@ public class AuthController : ControllerBase
     {
         try
         {
+            _logger.LogInformation($"Login attempt for user: {request.Username}");
             var result = await _authService.AuthenticateAsync(request.Username, request.Password);
+            _logger.LogInformation($"Authentication result: {result.success}, Message: {result.message}");
+
             if (!result.success)
             {
+                _logger.LogWarning($"Login failed for user {request.Username}: {result.message}");
                 return BadRequest(new { message = result.message });
             }
 
@@ -63,12 +67,18 @@ public class AuthController : ControllerBase
                 .Include(t => t.User)
                 .FirstOrDefaultAsync(t => t.Token == result.token);
 
+            if (authToken == null)
+            {
+                _logger.LogError("Token not found after successful authentication");
+                return StatusCode(500, new { message = "Error retrieving user data" });
+            }
+
             return Ok(new { 
                 message = "Authentication successful", 
                 token = result.token,
-                firstName = authToken?.FirstName,
-                lastName = authToken?.LastName,
-                userRole = authToken?.UserRole
+                firstName = authToken.FirstName,
+                lastName = authToken.LastName,
+                userRole = authToken.UserRole
             });
         }
         catch (Exception ex)

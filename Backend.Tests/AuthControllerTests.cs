@@ -27,7 +27,7 @@ public class AuthControllerTests : IClassFixture<TestWebApplicationFactory>
     public async Task Register_WithValidData_ShouldSucceed()
     {
         // Arrange
-        var registerRequest = new RegisterRequest("testuser", "password123");
+        var registerRequest = new RegisterRequest("testuser", "password123", "Test", "User", "Usuario");
 
         // Act
         var response = await _client.PostAsJsonAsync("/api/auth/register", registerRequest);
@@ -45,7 +45,7 @@ public class AuthControllerTests : IClassFixture<TestWebApplicationFactory>
     public async Task Register_WithExistingUsername_ShouldFail()
     {
         // Arrange
-        var registerRequest = new RegisterRequest("testuser2", "password123");
+        var registerRequest = new RegisterRequest("testuser2", "password123", "Test", "User", "Usuario");
         await _client.PostAsJsonAsync("/api/auth/register", registerRequest);
 
         // Act
@@ -64,7 +64,7 @@ public class AuthControllerTests : IClassFixture<TestWebApplicationFactory>
     public async Task Register_WithShortPassword_ShouldFail()
     {
         // Arrange
-        var registerRequest = new RegisterRequest("testuser3", "123");
+        var registerRequest = new RegisterRequest("testuser3", "123", "Test", "User", "Usuario");
 
         // Act
         var response = await _client.PostAsJsonAsync("/api/auth/register", registerRequest);
@@ -84,7 +84,7 @@ public class AuthControllerTests : IClassFixture<TestWebApplicationFactory>
         // Arrange
         var username = "testuser4";
         var password = "password123";
-        await _client.PostAsJsonAsync("/api/auth/register", new RegisterRequest(username, password));
+        await _client.PostAsJsonAsync("/api/auth/register", new RegisterRequest(username, password, "Test", "User", "Usuario"));
         var loginRequest = new LoginRequest(username, password);
 
         // Act
@@ -108,7 +108,9 @@ public class AuthControllerTests : IClassFixture<TestWebApplicationFactory>
         // Act
         var response = await _client.PostAsJsonAsync("/api/auth/login", loginRequest);
         var responseString = await response.Content.ReadAsStringAsync();
+        Console.WriteLine($"Response status: {response.StatusCode}");
         Console.WriteLine($"Response content: {responseString}");
+        Console.WriteLine($"Response content type: {response.Content.Headers.ContentType}");
         var content = JsonSerializer.Deserialize<Dictionary<string, string>>(responseString, _jsonOptions);
 
         // Assert
@@ -123,13 +125,16 @@ public class AuthControllerTests : IClassFixture<TestWebApplicationFactory>
         // Arrange
         var username = "testuser5";
         var password = "password123";
-        await _client.PostAsJsonAsync("/api/auth/register", new RegisterRequest(username, password));
+        await _client.PostAsJsonAsync("/api/auth/register", new RegisterRequest(username, password, "Test", "User", "Usuario"));
         var loginRequest = new LoginRequest(username, "wrongpassword");
 
         // Act
         for (int i = 0; i < 4; i++)
         {
-            await _client.PostAsJsonAsync("/api/auth/login", loginRequest);
+            var attemptResponse = await _client.PostAsJsonAsync("/api/auth/login", loginRequest);
+            var attemptContent = await attemptResponse.Content.ReadAsStringAsync();
+            Console.WriteLine($"Attempt {i + 1} status: {attemptResponse.StatusCode}");
+            Console.WriteLine($"Attempt {i + 1} content: {attemptContent}");
         }
         var response = await _client.PostAsJsonAsync("/api/auth/login", loginRequest);
         var responseString = await response.Content.ReadAsStringAsync();
@@ -148,10 +153,15 @@ public class AuthControllerTests : IClassFixture<TestWebApplicationFactory>
         // Arrange
         var username = "testuser6";
         var password = "password123";
-        await _client.PostAsJsonAsync("/api/auth/register", new RegisterRequest(username, password));
+        await _client.PostAsJsonAsync("/api/auth/register", new RegisterRequest(username, password, "Test", "User", "Usuario"));
         var loginResponse = await _client.PostAsJsonAsync("/api/auth/login", new LoginRequest(username, password));
-        var loginContent = JsonSerializer.Deserialize<Dictionary<string, string>>(
-            await loginResponse.Content.ReadAsStringAsync(), _jsonOptions);
+        var loginResponseString = await loginResponse.Content.ReadAsStringAsync();
+        Console.WriteLine($"Login response: {loginResponseString}");
+        var loginContent = JsonSerializer.Deserialize<Dictionary<string, string>>(loginResponseString, _jsonOptions);
+        if (loginContent != null)
+        {
+            Console.WriteLine($"Login content keys: {string.Join(", ", loginContent.Keys)}");
+        }
         var logoutRequest = new LogoutRequest(loginContent["token"]);
 
         // Act
@@ -175,21 +185,27 @@ public class AuthControllerTests : IClassFixture<TestWebApplicationFactory>
         // Arrange
         var username = "testuser7";
         var password = "password123";
-        await _client.PostAsJsonAsync("/api/auth/register", new RegisterRequest(username, password));
+        await _client.PostAsJsonAsync("/api/auth/register", new RegisterRequest(username, password, "Test", "User", "Usuario"));
         var loginResponse = await _client.PostAsJsonAsync("/api/auth/login", new LoginRequest(username, password));
-        var loginContent = JsonSerializer.Deserialize<Dictionary<string, string>>(
-            await loginResponse.Content.ReadAsStringAsync(), _jsonOptions);
+        var loginResponseString = await loginResponse.Content.ReadAsStringAsync();
+        Console.WriteLine($"Login response: {loginResponseString}");
+        var loginContent = JsonSerializer.Deserialize<Dictionary<string, string>>(loginResponseString, _jsonOptions);
+        if (loginContent != null)
+        {
+            Console.WriteLine($"Login content keys: {string.Join(", ", loginContent.Keys)}");
+        }
         var validateRequest = new ValidateTokenRequest(loginContent["token"]);
 
         // Act
         var response = await _client.PostAsJsonAsync("/api/auth/validate", validateRequest);
         var responseString = await response.Content.ReadAsStringAsync();
-        var content = JsonSerializer.Deserialize<Dictionary<string, bool>>(responseString, _jsonOptions);
+        Console.WriteLine($"Validate response: {responseString}");
+        var content = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(responseString, _jsonOptions);
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(content);
-        Assert.True(content["isValid"]);
+        Assert.True(content["isValid"].GetBoolean());
     }
 
     [Fact]

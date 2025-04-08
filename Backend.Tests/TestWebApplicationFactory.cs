@@ -1,4 +1,5 @@
 using Backend.Data;
+using Backend.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
@@ -90,6 +91,12 @@ public class TestWebApplicationFactory : WebApplicationFactory<Program>
                         // Reiniciar la secuencia de IDs
                         db.Database.ExecuteSqlRaw("DELETE FROM sqlite_sequence");
                         db.SaveChanges();
+
+                        // Insertar usuarios predeterminados
+                        var authService = scopedServices.GetRequiredService<AuthService>();
+                        authService.RegisterUserAsync("admin", "admin123", "Admin", "Admin", "Administrador").Wait();
+                        authService.RegisterUserAsync("profesor", "matematicas2024", "Profesor", "Test", "Profesor").Wait();
+                        authService.RegisterUserAsync("estudiante", "calculo2024!", "Estudiante", "Test", "Estudiante").Wait();
                     }
                 }
                 catch (Exception ex)

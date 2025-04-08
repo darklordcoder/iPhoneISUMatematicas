@@ -26,9 +26,9 @@ public class LoginCombinationsTests : IClassFixture<TestWebApplicationFactory>
     private async Task RegisterDefaultUsers()
     {
         // Registrar los usuarios predeterminados
-        await _client.PostAsJsonAsync("/api/auth/register", new RegisterRequest("admin", "admin123"));
-        await _client.PostAsJsonAsync("/api/auth/register", new RegisterRequest("profesor", "matematicas2024"));
-        await _client.PostAsJsonAsync("/api/auth/register", new RegisterRequest("estudiante", "calculo2024!"));
+        await _client.PostAsJsonAsync("/api/auth/register", new RegisterRequest("admin", "admin123", "Admin", "Admin", "Administrador"));
+        await _client.PostAsJsonAsync("/api/auth/register", new RegisterRequest("profesor", "matematicas2024", "Profesor", "Test", "Profesor"));
+        await _client.PostAsJsonAsync("/api/auth/register", new RegisterRequest("estudiante", "calculo2024!", "Estudiante", "Test", "Estudiante"));
     }
 
     [Theory]

@@ -26,7 +26,7 @@ public class AssignmentSolver
         }
     }
 
-    public static AssignmentSolution SolveAssignmentProblem(
+    private static AssignmentSolution SolveAssignmentProblem(
         double[,] efficiencyMatrix,
         int maxAssignmentsPerEmployee,
         int[] maxEmployeesPerProject
@@ -104,8 +104,10 @@ public class AssignmentSolver
         if (result.Status == Solver.ResultStatus.OPTIMAL)
         {
             result.OptimalEfficiency = solver.Objective().Value();
+            //convertir matriz en string con formato tabulado
+           
             result.Message =
-                $"Solución Óptima Encontrada. Eficiencia Total Máxima = {result.OptimalEfficiency}";
+                $"Solución Óptima Encontrada. Eficiencia Total Máxima = {result.OptimalEfficiency} ";
 
             for (int i = 0; i < numEmployees; ++i)
             {
@@ -155,29 +157,26 @@ public class AssignmentSolver
         int[] maxEmployeesPerProject
     )
     {
-        // --- Datos de Ejemplo ---
-        // Eficiencias: 8 empleados, 5 proyectos
-
         // --- Resolver ---
         AssignmentSolution solution = SolveAssignmentProblem(
             efficiencyMatrix,
             maxAssignmentsPerEmployee,
             maxEmployeesPerProject
         );
-        // --- Mostrar Resultados ---
-        StringBuilder solutionResponse = new StringBuilder();
-        solutionResponse.AppendLine(solution.Message);
-        if (solution.Status == Solver.ResultStatus.OPTIMAL)
-        {
-            solutionResponse.AppendLine("Asignaciones:");
-            foreach (var assignment in solution.Assignments)
-            {
-                solutionResponse.AppendLine(
-                    $"  Empleado {assignment.Employee} -> Proyecto {assignment.Project} (Eficiencia: {assignment.Efficiency})"
-                );
-            }
-        }
-        Console.WriteLine(solutionResponse);
+        // // --- Mostrar Resultados ---
+        // StringBuilder solutionResponse = new StringBuilder();
+        // solutionResponse.AppendLine(solution.Message);
+        // if (solution.Status == Solver.ResultStatus.OPTIMAL)
+        // {
+        //     solutionResponse.AppendLine("Asignaciones:");
+        //     foreach (var assignment in solution.Assignments)
+        //     {
+        //         solutionResponse.AppendLine(
+        //             $"  Empleado {assignment.Employee} -> Proyecto {assignment.Project} (Eficiencia: {assignment.Efficiency})"
+        //         );
+        //     }
+        // }
+        // Console.WriteLine(solutionResponse);
 
         return solution;
     }

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Backend.Controllers;
 
 [ApiController]
-[Route("api/Actividad2")]
+[Route("api/[controller]")]
 public class Actividad2Controller : ControllerBase
 {
     [HttpGet]

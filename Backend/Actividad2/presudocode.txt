@@ -1,0 +1,112 @@
+// Pseudocódigo para Asignación Óptima de Empleados a Proyectos usando Google OR-Tools en C# (MIP)
+
+// --- PASO 0: Definición del Problema Específico ---
+// Objetivo: Maximizar la eficiencia total asignando empleados a proyectos.
+// Variables: x[i, j] = 1 si empleado 'i' se asigna a proyecto 'j', 0 si no. (Binarias)
+// Datos:
+//   - N: número de empleados
+//   - M: número de proyectos
+//   - E[i, j]: Tasa de eficiencia del empleado 'i' en el proyecto 'j'.
+// Restricciones (Ejemplos comunes, adaptar según necesidad):
+//   1. Cada empleado 'i' puede ser asignado a un máximo de 'MaxAssignmentsPerEmployee' proyectos (a menudo 1).
+//      SUMA(j=0..M-1) x[i, j] <= MaxAssignmentsPerEmployee     (para cada empleado i)
+//   2. Cada proyecto 'j' tiene un límite de 'MaxEmployeesPerProject[j]' empleados asignados.
+//      SUMA(i=0..N-1) x[i, j] <= MaxEmployeesPerProject[j]   (para cada proyecto j)
+//   3. Las variables x[i, j] deben ser binarias (0 o 1).
+
+// 1. Inicialización
+// Añadir referencia: using Google.OrTools.LinearSolver;
+
+// Crear una instancia del solver. Para problemas con variables enteras/binarias, usar "CBC" o "SCIP".
+CREAR solver = Solver.CreateSolver("CBC"); // O "SCIP"
+
+// 2. Definir los Datos del Problema
+// Dimensiones
+DEFINIR numEmployees COMO Entero = N;
+DEFINIR numProjects COMO Entero = M;
+
+// Matriz de Eficiencia (E[i, j])
+DEFINIR efficiencyMatrix COMO Matriz_De_Doubles[N, M] = { ... valores de eficiencia ... };
+
+// Parámetros de Restricciones
+DEFINIR maxAssignmentsPerEmployee COMO Entero = 1; // Ejemplo: cada empleado a lo más 1 proyecto
+DEFINIR maxEmployeesPerProject COMO Array_De_Enteros[M] = { ... límites para cada proyecto ... };
+
+// 3. Crear las Variables de Decisión Binarias
+// Crear una matriz para almacenar las variables del solver x[i, j]
+CREAR variables COMO Matriz_De_Variable[N, M];
+PARA i DESDE 0 HASTA numEmployees - 1:
+  PARA j DESDE 0 HASTA numProjects - 1:
+    // Crear cada variable x[i, j] como Binaria (0 o 1)
+    variables[i, j] = solver.MakeBoolVar($"x_{i}_{j}");
+  FIN PARA
+FIN PARA
+
+// 4. Definir las Restricciones Lineales
+// Restricción 1: Límite de asignaciones por empleado
+PARA i DESDE 0 HASTA numEmployees - 1:
+  CREAR assignmentsPerEmployeeExpr = NUEVA LinearExpr();
+  PARA j DESDE 0 HASTA numProjects - 1:
+    assignmentsPerEmployeeExpr += variables[i, j];
+  FIN PARA
+  // Añadir la restricción: SUMA(j) x[i, j] <= maxAssignmentsPerEmployee
+  solver.Add(assignmentsPerEmployeeExpr <= maxAssignmentsPerEmployee);
+FIN PARA
+
+// Restricción 2: Límite de empleados por proyecto
+PARA j DESDE 0 HASTA numProjects - 1:
+  CREAR employeesPerProjectExpr = NUEVA LinearExpr();
+  PARA i DESDE 0 HASTA numEmployees - 1:
+    employeesPerProjectExpr += variables[i, j];
+  FIN PARA
+  // Añadir la restricción: SUMA(i) x[i, j] <= maxEmployeesPerProject[j]
+  solver.Add(employeesPerProjectExpr <= maxEmployeesPerProject[j]);
+FIN PARA
+
+// Restricción 3: Variables binarias (ya se definió al crear con MakeBoolVar)
+
+// 5. Definir la Función Objetivo (Maximizar Eficiencia Total)
+CREAR objective COMO NUEVA LinearExpr();
+PARA i DESDE 0 HASTA numEmployees - 1:
+  PARA j DESDE 0 HASTA numProjects - 1:
+    objective += efficiencyMatrix[i, j] * variables[i, j];
+  FIN PARA
+FIN PARA
+
+// Establecer el objetivo a Maximizar
+solver.Maximize(objective);
+
+// 6. Resolver el Problema (MIP)
+// Llamar al método Solve del solver
+estadoSolucion = solver.Solve();
+
+// 7. Evaluar y Mostrar Resultados
+// Verificar si se encontró una solución óptima usando Solver.ResultStatus
+SI estadoSolucion == Solver.ResultStatus.OPTIMAL ENTONCES
+  IMPRIMIR "Solución Óptima Encontrada:"
+  IMPRIMIR "Eficiencia Total Máxima =", solver.Objective().Value()
+  IMPRIMIR "Asignaciones:"
+  // Imprimir las asignaciones (donde x[i, j] == 1)
+  PARA i DESDE 0 HASTA numEmployees - 1:
+    PARA j DESDE 0 HASTA numProjects - 1:
+      // Comprobar si la variable es 1 (con una pequeña tolerancia por cálculos de punto flotante)
+      SI variables[i, j].SolutionValue() > 0.5 ENTONCES
+        IMPRIMIR $"Empleado {i} asignado a Proyecto {j} (Eficiencia: {efficiencyMatrix[i, j]})";
+      FIN SI
+    FIN PARA
+  FIN PARA
+SINO SI estadoSolucion == Solver.ResultStatus.FEASIBLE ENTONCES
+  IMPRIMIR "Se encontró una solución factible, pero no necesariamente óptima."
+  // Podrías imprimir la solución factible encontrada de manera similar a la óptima
+SINO SI estadoSolucion == Solver.ResultStatus.INFEASIBLE ENTONCES
+  IMPRIMIR "El problema es infactible (no hay asignación posible que cumpla las restricciones)."
+SINO SI estadoSolucion == Solver.ResultStatus.UNBOUNDED ENTONCES
+  // Nota: Esto es menos común en problemas de asignación con límites claros, pero posible si las restricciones son incorrectas.
+  IMPRIMIR "El problema es no acotado."
+SINO SI estadoSolucion == Solver.ResultStatus.ABNORMAL ENTONCES
+  IMPRIMIR "El solver terminó de forma anormal (posiblemente por problemas numéricos o configuración)."
+SINO SI estadoSolucion == Solver.ResultStatus.NOT_SOLVED ENTONCES
+  IMPRIMIR "El solver no ha sido llamado o falló antes de iniciar."
+SINO
+  IMPRIMIR "El solver devolvió un estado desconocido o no cubierto:", estadoSolucion
+FIN SI

@@ -82,9 +82,8 @@ app.MapControllers();
 // Fallback para SPA
 app.MapFallbackToFile("index.html");
 
+Console.WriteLine(AssignmentSolver.RunSolver());
 app.Run();
-
-
 
 // Hacer la clase Program pública para las pruebas
 public partial class Program { }

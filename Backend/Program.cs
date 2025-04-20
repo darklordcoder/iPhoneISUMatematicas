@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Backend;
 using Backend.Data;
 using Backend.Models;
@@ -82,7 +83,6 @@ app.MapControllers();
 // Fallback para SPA
 app.MapFallbackToFile("index.html");
 
-Console.WriteLine(AssignmentSolver.RunSolver());
 app.Run();
 
 // Hacer la clase Program pública para las pruebas

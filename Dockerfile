@@ -12,7 +12,7 @@ COPY Backend/*.csproj ./Backend/
 RUN dotnet restore Backend
 COPY Backend/ ./Backend/
 WORKDIR /app/Backend
-RUN dotnet publish -c Release -o out
+RUN dotnet publish -c Release -o out -r linux-x64
 
 # Etapa 3: Imagen final
 FROM mcr.microsoft.com/dotnet/aspnet:8.0

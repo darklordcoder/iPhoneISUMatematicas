@@ -11,7 +11,7 @@ import BootScreen from './components/BootScreen';
 import Weather from './components/Weather';
 import { useState } from 'react';
 import { AuthLayout } from './layouts/AuthLayout';
-import { Assignments } from './actividades/actividad2/assigments';
+import { Assignments } from './actividades/actividad2/Assigments';
 function AnimatedRoutes() {
   const location = useLocation();
 

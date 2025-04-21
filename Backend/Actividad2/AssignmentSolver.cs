@@ -105,7 +105,6 @@ public class AssignmentSolver
         {
             result.OptimalEfficiency = solver.Objective().Value();
             //convertir matriz en string con formato tabulado
-           
             result.Message =
                 $"Solución Óptima Encontrada. Eficiencia Total Máxima = {result.OptimalEfficiency} ";
 
@@ -149,8 +148,6 @@ public class AssignmentSolver
 
         return result;
     }
-
-    // Método de ejemplo para probar la clase
     public static AssignmentSolution RunSolver(
         double[,] efficiencyMatrix,
         int maxAssignmentsPerEmployee,
@@ -163,21 +160,6 @@ public class AssignmentSolver
             maxAssignmentsPerEmployee,
             maxEmployeesPerProject
         );
-        // // --- Mostrar Resultados ---
-        // StringBuilder solutionResponse = new StringBuilder();
-        // solutionResponse.AppendLine(solution.Message);
-        // if (solution.Status == Solver.ResultStatus.OPTIMAL)
-        // {
-        //     solutionResponse.AppendLine("Asignaciones:");
-        //     foreach (var assignment in solution.Assignments)
-        //     {
-        //         solutionResponse.AppendLine(
-        //             $"  Empleado {assignment.Employee} -> Proyecto {assignment.Project} (Eficiencia: {assignment.Efficiency})"
-        //         );
-        //     }
-        // }
-        // Console.WriteLine(solutionResponse);
-
         return solution;
     }
 }

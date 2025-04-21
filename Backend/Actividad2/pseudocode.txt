@@ -1,112 +1,151 @@
-// Pseudocódigo para Asignación Óptima de Empleados a Proyectos usando Google OR-Tools en C# (MIP)
+// --- DEFINICIÓN DE ESTRUCTURAS DE DATOS ---
+// Estructura para una asignación individual
+ESTRUCTURA Assignment:
+  Empleado COMO Entero
+  Proyecto COMO Entero
+  Eficiencia COMO Double
+FIN ESTRUCTURA
 
-// --- PASO 0: Definición del Problema Específico ---
-// Objetivo: Maximizar la eficiencia total asignando empleados a proyectos.
-// Variables: x[i, j] = 1 si empleado 'i' se asigna a proyecto 'j', 0 si no. (Binarias)
-// Datos:
-//   - N: número de empleados
-//   - M: número de proyectos
-//   - E[i, j]: Tasa de eficiencia del empleado 'i' en el proyecto 'j'.
-// Restricciones (Ejemplos comunes, adaptar según necesidad):
-//   1. Cada empleado 'i' puede ser asignado a un máximo de 'MaxAssignmentsPerEmployee' proyectos (a menudo 1).
-//      SUMA(j=0..M-1) x[i, j] <= MaxAssignmentsPerEmployee     (para cada empleado i)
-//   2. Cada proyecto 'j' tiene un límite de 'MaxEmployeesPerProject[j]' empleados asignados.
-//      SUMA(i=0..N-1) x[i, j] <= MaxEmployeesPerProject[j]   (para cada proyecto j)
-//   3. Las variables x[i, j] deben ser binarias (0 o 1).
+// Estructura para la solución completa
+ESTRUCTURA AssignmentSolution:
+  Status COMO Solver.ResultStatus
+  OptimalEfficiency COMO Double
+  Assignments COMO Lista_De_Assignment
+  Message COMO String (opcional)
 
-// 1. Inicialización
-// Añadir referencia: using Google.OrTools.LinearSolver;
+  // Constructor (inicializa la lista de asignaciones)
+  CONSTRUCTOR():
+    Assignments = NUEVA Lista_De_Assignment()
+  FIN CONSTRUCTOR
+FIN ESTRUCTURA
 
-// Crear una instancia del solver. Para problemas con variables enteras/binarias, usar "CBC" o "SCIP".
-CREAR solver = Solver.CreateSolver("CBC"); // O "SCIP"
+// --- CLASE PRINCIPAL ---
+CLASE AssignmentSolver:
 
-// 2. Definir los Datos del Problema
-// Dimensiones
-DEFINIR numEmployees COMO Entero = N;
-DEFINIR numProjects COMO Entero = M;
+  // --- MÉTODO PRIVADO PARA RESOLVER EL PROBLEMA ---
+  // Recibe los datos del problema y devuelve un objeto AssignmentSolution
+  FUNCIÓN PRIVADA ESTATICA SolveAssignmentProblem(
+      efficiencyMatrix COMO Matriz_De_Doubles[N, M],
+      maxAssignmentsPerEmployee COMO Entero,
+      maxEmployeesPerProject COMO Array_De_Enteros[M]
+  ) DEVUELVE AssignmentSolution:
 
-// Matriz de Eficiencia (E[i, j])
-DEFINIR efficiencyMatrix COMO Matriz_De_Doubles[N, M] = { ... valores de eficiencia ... };
+    // Crear instancia de la solución a devolver
+    CREAR result COMO NUEVA AssignmentSolution()
 
-// Parámetros de Restricciones
-DEFINIR maxAssignmentsPerEmployee COMO Entero = 1; // Ejemplo: cada empleado a lo más 1 proyecto
-DEFINIR maxEmployeesPerProject COMO Array_De_Enteros[M] = { ... límites para cada proyecto ... };
+    // Obtener dimensiones
+    DEFINIR numEmployees COMO Entero = Dimension_0(efficiencyMatrix)
+    DEFINIR numProjects COMO Entero = Dimension_1(efficiencyMatrix)
 
-// 3. Crear las Variables de Decisión Binarias
-// Crear una matriz para almacenar las variables del solver x[i, j]
-CREAR variables COMO Matriz_De_Variable[N, M];
-PARA i DESDE 0 HASTA numEmployees - 1:
-  PARA j DESDE 0 HASTA numProjects - 1:
-    // Crear cada variable x[i, j] como Binaria (0 o 1)
-    variables[i, j] = solver.MakeBoolVar($"x_{i}_{j}");
-  FIN PARA
-FIN PARA
+    // --- VALIDACIONES INICIALES ---
+    // Validar longitud de maxEmployeesPerProject
+    SI Longitud(maxEmployeesPerProject) != numProjects ENTONCES
+      result.Status = Solver.ResultStatus.NOT_SOLVED
+      result.Message = "Error: La longitud del array maxEmployeesPerProject debe coincidir con el número de proyectos."
+      DEVOLVER result
+    FIN SI
 
-// 4. Definir las Restricciones Lineales
-// Restricción 1: Límite de asignaciones por empleado
-PARA i DESDE 0 HASTA numEmployees - 1:
-  CREAR assignmentsPerEmployeeExpr = NUEVA LinearExpr();
-  PARA j DESDE 0 HASTA numProjects - 1:
-    assignmentsPerEmployeeExpr += variables[i, j];
-  FIN PARA
-  // Añadir la restricción: SUMA(j) x[i, j] <= maxAssignmentsPerEmployee
-  solver.Add(assignmentsPerEmployeeExpr <= maxAssignmentsPerEmployee);
-FIN PARA
+    // --- 1. Inicialización del Solver ---
+    CREAR solver = Solver.CreateSolver("CBC")
 
-// Restricción 2: Límite de empleados por proyecto
-PARA j DESDE 0 HASTA numProjects - 1:
-  CREAR employeesPerProjectExpr = NUEVA LinearExpr();
-  PARA i DESDE 0 HASTA numEmployees - 1:
-    employeesPerProjectExpr += variables[i, j];
-  FIN PARA
-  // Añadir la restricción: SUMA(i) x[i, j] <= maxEmployeesPerProject[j]
-  solver.Add(employeesPerProjectExpr <= maxEmployeesPerProject[j]);
-FIN PARA
+    // Validar creación del solver
+    SI solver ES NULL ENTONCES
+      result.Status = Solver.ResultStatus.NOT_SOLVED
+      result.Message = "Error: No se pudo crear el solver CBC."
+      DEVOLVER result
+    FIN SI
 
-// Restricción 3: Variables binarias (ya se definió al crear con MakeBoolVar)
-
-// 5. Definir la Función Objetivo (Maximizar Eficiencia Total)
-CREAR objective COMO NUEVA LinearExpr();
-PARA i DESDE 0 HASTA numEmployees - 1:
-  PARA j DESDE 0 HASTA numProjects - 1:
-    objective += efficiencyMatrix[i, j] * variables[i, j];
-  FIN PARA
-FIN PARA
-
-// Establecer el objetivo a Maximizar
-solver.Maximize(objective);
-
-// 6. Resolver el Problema (MIP)
-// Llamar al método Solve del solver
-estadoSolucion = solver.Solve();
-
-// 7. Evaluar y Mostrar Resultados
-// Verificar si se encontró una solución óptima usando Solver.ResultStatus
-SI estadoSolucion == Solver.ResultStatus.OPTIMAL ENTONCES
-  IMPRIMIR "Solución Óptima Encontrada:"
-  IMPRIMIR "Eficiencia Total Máxima =", solver.Objective().Value()
-  IMPRIMIR "Asignaciones:"
-  // Imprimir las asignaciones (donde x[i, j] == 1)
-  PARA i DESDE 0 HASTA numEmployees - 1:
-    PARA j DESDE 0 HASTA numProjects - 1:
-      // Comprobar si la variable es 1 (con una pequeña tolerancia por cálculos de punto flotante)
-      SI variables[i, j].SolutionValue() > 0.5 ENTONCES
-        IMPRIMIR $"Empleado {i} asignado a Proyecto {j} (Eficiencia: {efficiencyMatrix[i, j]})";
-      FIN SI
+    // --- 3. Crear las Variables de Decisión Binarias x[i, j] ---
+    CREAR variables COMO Matriz_De_Variable[numEmployees, numProjects]
+    PARA i DESDE 0 HASTA numEmployees - 1:
+      PARA j DESDE 0 HASTA numProjects - 1:
+        variables[i, j] = solver.MakeBoolVar($"x_{i}_{j}")
+      FIN PARA
     FIN PARA
-  FIN PARA
-SINO SI estadoSolucion == Solver.ResultStatus.FEASIBLE ENTONCES
-  IMPRIMIR "Se encontró una solución factible, pero no necesariamente óptima."
-  // Podrías imprimir la solución factible encontrada de manera similar a la óptima
-SINO SI estadoSolucion == Solver.ResultStatus.INFEASIBLE ENTONCES
-  IMPRIMIR "El problema es infactible (no hay asignación posible que cumpla las restricciones)."
-SINO SI estadoSolucion == Solver.ResultStatus.UNBOUNDED ENTONCES
-  // Nota: Esto es menos común en problemas de asignación con límites claros, pero posible si las restricciones son incorrectas.
-  IMPRIMIR "El problema es no acotado."
-SINO SI estadoSolucion == Solver.ResultStatus.ABNORMAL ENTONCES
-  IMPRIMIR "El solver terminó de forma anormal (posiblemente por problemas numéricos o configuración)."
-SINO SI estadoSolucion == Solver.ResultStatus.NOT_SOLVED ENTONCES
-  IMPRIMIR "El solver no ha sido llamado o falló antes de iniciar."
-SINO
-  IMPRIMIR "El solver devolvió un estado desconocido o no cubierto:", estadoSolucion
-FIN SI
+
+    // --- 4. Definir las Restricciones Lineales ---
+    // Restricción 1: Límite de asignaciones por empleado
+    PARA i DESDE 0 HASTA numEmployees - 1:
+      CREAR assignmentsPerEmployeeExpr = NUEVA LinearExpr()
+      PARA j DESDE 0 HASTA numProjects - 1:
+        assignmentsPerEmployeeExpr += variables[i, j]
+      FIN PARA
+      solver.Add(assignmentsPerEmployeeExpr <= maxAssignmentsPerEmployee)
+    FIN PARA
+
+    // Restricción 2: Límite de empleados por proyecto
+    PARA j DESDE 0 HASTA numProjects - 1:
+      CREAR employeesPerProjectExpr = NUEVA LinearExpr()
+      PARA i DESDE 0 HASTA numEmployees - 1:
+        employeesPerProjectExpr += variables[i, j]
+      FIN PARA
+      solver.Add(employeesPerProjectExpr <= maxEmployeesPerProject[j])
+    FIN PARA
+
+    // --- 5. Definir la Función Objetivo (Maximizar Eficiencia Total) ---
+    CREAR objective COMO NUEVA LinearExpr()
+    PARA i DESDE 0 HASTA numEmployees - 1:
+      PARA j DESDE 0 HASTA numProjects - 1:
+        objective += efficiencyMatrix[i, j] * variables[i, j]
+      FIN PARA
+    FIN PARA
+    solver.Maximize(objective)
+
+    // --- 6. Resolver el Problema ---
+    result.Status = solver.Solve()
+
+    // --- 7. Evaluar y Procesar Resultados ---
+    SI result.Status == Solver.ResultStatus.OPTIMAL ENTONCES
+      result.OptimalEfficiency = solver.Objective().Value()
+      result.Message = $"Solución Óptima Encontrada. Eficiencia Total Máxima = {result.OptimalEfficiency}"
+
+      // Recopilar las asignaciones
+      PARA i DESDE 0 HASTA numEmployees - 1:
+        PARA j DESDE 0 HASTA numProjects - 1:
+          // Usar una tolerancia pequeña (0.9 en la implementación)
+          SI variables[i, j].SolutionValue() > 0.9 ENTONCES
+            CREAR nuevaAsignacion COMO NUEVA Assignment CON {
+              Employee = i,
+              Project = j,
+              Efficiency = efficiencyMatrix[i, j]
+            }
+            AÑADIR nuevaAsignacion A result.Assignments
+          FIN SI
+        FIN PARA
+      FIN PARA
+    SINO SI result.Status == Solver.ResultStatus.FEASIBLE ENTONCES
+      result.Message = "Se encontró una solución factible, pero no necesariamente óptima."
+      // Aquí se podría también extraer la solución factible si fuera necesario
+    SINO SI result.Status == Solver.ResultStatus.INFEASIBLE ENTONCES
+      result.Message = "El problema es infactible (no hay asignación posible que cumpla las restricciones)."
+    SINO SI result.Status == Solver.ResultStatus.UNBOUNDED ENTONCES
+      result.Message = "El problema es no acotado."
+    SINO
+      result.Message = $"El solver terminó con estado: {result.Status}"
+    FIN SI
+
+    // Devolver el objeto de solución completo
+    DEVOLVER result
+
+  FIN FUNCIÓN
+
+  // --- MÉTODO PÚBLICO PARA EJECUTAR EL SOLVER ---
+  // Este método actúa como punto de entrada y llama a SolveAssignmentProblem
+  FUNCIÓN PÚBLICA ESTATICA RunSolver(
+      efficiencyMatrix COMO Matriz_De_Doubles[N, M],
+      maxAssignmentsPerEmployee COMO Entero,
+      maxEmployeesPerProject COMO Array_De_Enteros[M]
+  ) DEVUELVE AssignmentSolution:
+
+    // Llamar al método privado que contiene la lógica principal
+    DEFINIR solution COMO AssignmentSolution = SolveAssignmentProblem(
+        efficiencyMatrix,
+        maxAssignmentsPerEmployee,
+        maxEmployeesPerProject
+    )
+    // Devolver la solución
+    DEVOLVER solution
+
+  FIN FUNCIÓN
+
+FIN CLASE

@@ -10,7 +10,7 @@ namespace Backend.Controllers;
 [Route("api/[controller]")]
 public class Actividad2Controller : ControllerBase
 {
-    [HttpGet]
+    [HttpPost]
     public IActionResult Get()
     {
         double[,] efficiencyMatrix =

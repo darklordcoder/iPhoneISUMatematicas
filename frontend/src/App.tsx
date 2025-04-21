@@ -11,7 +11,7 @@ import BootScreen from './components/BootScreen';
 import Weather from './components/Weather';
 import { useState } from 'react';
 import { AuthLayout } from './layouts/AuthLayout';
-
+import { Assignments } from './actividades/actividad2/assigments';
 function AnimatedRoutes() {
   const location = useLocation();
 
@@ -29,6 +29,7 @@ function AnimatedRoutes() {
           <Route path="/home" element={<HomeScreen />} />
           <Route path="/calculator" element={<Calculator />} />
           <Route path="/weather" element={<Weather />} />
+          <Route path="/assignments" element={<Assignments />} />
         </Route>
 
         {/* Ruta para manejar URLs no encontradas */}

@@ -30,6 +30,18 @@ export const Menu = () => {
       highlightColor: "bg-orange-200"
     },
     {
+      id: 8,
+      title: "Asignación Óptima de Empleados a Proyectos",
+      description: "Asigna empleados a proyectos para maximizar la eficiencia",
+      icon: "💼",
+      path: "/assignments",
+      color: "bg-gray-100",
+      borderColor: "border-gray-200",
+      iconColor: "text-gray-700",
+      highlighted: true,
+      highlightColor: "bg-orange-200"
+    },
+    {
       id: 2,
       title: "Ciudades del Mundo",
       description: "Explora ciudades de diferentes países",

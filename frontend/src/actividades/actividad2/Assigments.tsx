@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { JSX } from 'react/jsx-runtime';
 
 // Definimos los tipos basados en la estructura del backend
 interface Assignment {
@@ -17,7 +18,7 @@ interface AssignmentSolution {
 
 export const Assignments = () => {
     const navigate = useNavigate();
-    const [efficiencyMatrix] = useState<number[][]>([
+    const [efficiencyMatrix, setEfficiencyMatrix] = useState<number[][]>([
         [90, 76, 75, 70, 50],
         [35, 85, 55, 65, 45],
         [100, 95, 90, 85, 50],
@@ -33,13 +34,39 @@ export const Assignments = () => {
     const [solution, setSolution] = useState<AssignmentSolution | null>(null);
     const [assignments, setAssignments] = useState<Assignment[]>([]);
 
+
+    const generateRandomMatrix = (rows:number,cols:number) => {
+        const matrix = [];
+        for (let i = 0; i < rows; i++) {
+            const row = [];
+            for (let j = 0; j < cols; j++) {
+                row.push(Math.floor(Math.random() * 1000));      
+            }
+            matrix.push(row);
+        }
+        return matrix;
+    }
+    
+
     // Tipamos las props de los componentes de renderizado
     interface RenderMatrixProps {
         matrix: number[][];
     }
     const RenderMatrix: React.FC<RenderMatrixProps> = ({ matrix }) => {
+        const totalRows = matrix.length;
+       const colsInTable = matrix[0].length? 'grid-cols-6' : 'grid-cols-5';
+       let header: JSX.Element[] = [];
+       if(totalRows>1){
+        header = matrix[0].map((_cell:number,cellIndex:number)=><div key={cellIndex} className='self-center font-semibold'>P{cellIndex+1}</div>) 
+        header.unshift(<div></div>)
+       }
+
+        
         return matrix.map((row: number[], index: number) => (
-            <div className="grid grid-cols-5 gap-1 text-lg text-center even:bg-gray-200 " key={index}>
+            
+            <div className={'grid gap-1 text-lg text-center even:bg-gray-200 ' + colsInTable} key={index}>
+                {totalRows>1 && index === 0 &&   header }
+                {totalRows>1 && <div className='self-center font-semibold '>E{index}</div>}
                 {row.map((cell: number, cellIndex: number) => (
                     <div key={cellIndex}>{cell}</div>
                 ))}
@@ -78,13 +105,14 @@ export const Assignments = () => {
         console.log(efficiencyMatrix);
         console.log(maxEmployeesPerProject);
         console.log(maxAssignmentsPerEmployee);
-        //fetch to backend
+
+        const formattedString = JSON.stringify(efficiencyMatrix).replace(/\],\[/g, "|").replace(/\[\[/g, "").replace(/\]\]/g, "");
         const solverData = {
-            efficiencyMatrix: efficiencyMatrix,
+            efficiencyMatrix: formattedString,
             maxEmployeesPerProject: maxEmployeesPerProject,
             maxAssignmentsPerEmployee: maxAssignmentsPerEmployee
         }   
-        fetch('/api/actividad2',{method:'POST',body:JSON.stringify(solverData) })
+        fetch('/api/actividad2',{method:'POST',body:JSON.stringify(solverData) ,headers: {'Content-Type': 'application/json'}})
             .then(response => response.json())
             .then(data => setSolution(data))
             .catch(error => console.error('Error:', error));
@@ -118,6 +146,11 @@ export const Assignments = () => {
                     <path d="M15 19l-7-7 7-7" />
                 </svg>
             </button>
+            <button className='w-full p-2 mb-4 font-bold text-white bg-blue-500 rounded-lg' onClick={() =>{
+                setSolution(null)
+                setEfficiencyMatrix(generateRandomMatrix(8,5))
+                setAssignments([])
+                }}>Generar Matriz Aleatoria</button>
         <div className='flex-col flex-1 overflow-y-auto bg-gray-200'>
             {/* return button */}
           
@@ -142,7 +175,7 @@ export const Assignments = () => {
                          <ul className="pl-5 list-disc">
                             {assignments.map((assign, index) => (
                                 <li key={index}>
-                                    Empleado {assign.employee} {'->'} Proyecto {assign.project} (Eficiencia: {assign.efficiency})
+                                    Empleado {assign.employee+1} {'->'} Proyecto {assign.project+1} (Eficiencia: {assign.efficiency})
                                 </li>
                             ))}
                         </ul>
@@ -167,6 +200,7 @@ export const Assignments = () => {
                 <RenderMatrix matrix={[maxEmployeesPerProject]}/>
             </div>
                 <button className='w-full p-2 mb-4 font-bold text-white bg-blue-500 rounded-lg' onClick={getSolution}>Calcular Solucion</button>
+               
         </div>
         </div>
     );

@@ -27,7 +27,7 @@ public class AssignmentSolver
     }
 
     private static AssignmentSolution SolveAssignmentProblem(
-        double[,] efficiencyMatrix,
+        int[,] efficiencyMatrix,
         int maxAssignmentsPerEmployee,
         int[] maxEmployeesPerProject
     )
@@ -148,18 +148,44 @@ public class AssignmentSolver
 
         return result;
     }
-    public static AssignmentSolution RunSolver(
-        double[,] efficiencyMatrix,
-        int maxAssignmentsPerEmployee,
-        int[] maxEmployeesPerProject
-    )
+
+    public static AssignmentSolution RunSolver(AssignmentData assignmentData)
     {
         // --- Resolver ---
+        var efficiencyMatrix = assignmentData
+            .EfficiencyMatrix.Split('|')
+            .Select(row => row.Split(',').Select(int.Parse).ToArray())
+            .ToArray();
+
+        //convertir efficiencyMatrix a int[,]
+        int[,] efficiencyMatrix2 = new int[efficiencyMatrix.Length, efficiencyMatrix[0].Length];
+        for (int i = 0; i < efficiencyMatrix.Length; i++)
+        {
+            for (int j = 0; j < efficiencyMatrix[i].Length; j++)
+            {
+                efficiencyMatrix2[i, j] = efficiencyMatrix[i][j];
+            }
+        }
+        // var efficiencyMatrix2 = new int[efficiencyMatrix.Length / 2, efficiencyMatrix.Length / 2];
+        // for (int i = 0; i < efficiencyMatrix.Length / 2; i++)
+        // {
+        //     for (int j = 0; j < efficiencyMatrix.Length / 2; j++)
+        //     {
+        //         efficiencyMatrix2[i, j] = efficiencyMatrix[i * 2 + j];
+        //    as
+        // }sASadsasdadsasdad
         AssignmentSolution solution = SolveAssignmentProblem(
-            efficiencyMatrix,
-            maxAssignmentsPerEmployee,
-            maxEmployeesPerProject
+            efficiencyMatrix2,
+            assignmentData.MaxAssignmentsPerEmployee,
+            assignmentData.MaxEmployeesPerProject
         );
         return solution;
     }
+}
+
+public class AssignmentData
+{
+    public string EfficiencyMatrix { get; set; }
+    public int MaxAssignmentsPerEmployee { get; set; }
+    public int[] MaxEmployeesPerProject { get; set; }
 }

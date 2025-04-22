@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { JSX } from 'react/jsx-runtime';
+import { motion } from 'framer-motion';
 
 // Definimos los tipos basados en la estructura del backend
 interface Assignment {
@@ -16,25 +17,26 @@ interface AssignmentSolution {
     message?: string; // El mensaje es opcional
 }
 
+// [
+//     [90, 76, 75, 70, 50],
+//     [35, 85, 55, 65, 45],
+//     [100, 95, 90, 85, 50],
+//     [50, 100, 95, 80, 60],
+//     [100, 20, 30, 40, 30],
+//     [10, 20, 30, 40, 50],
+//     [56, 45, 30, 20, 10],
+//     [99, 98, 97, 96, 95],
+//     [100, 100, 100, 100, 100],
+// ]
+
 export const Assignments = () => {
     const navigate = useNavigate();
-    const [efficiencyMatrix, setEfficiencyMatrix] = useState<number[][]>([
-        [90, 76, 75, 70, 50],
-        [35, 85, 55, 65, 45],
-        [100, 95, 90, 85, 50],
-        [50, 100, 95, 80, 60],
-        [100, 20, 30, 40, 30],
-        [10, 20, 30, 40, 50],
-        [56, 45, 30, 20, 10],
-        [99, 98, 97, 96, 95],
-        [100, 100, 100, 100, 100],
-    ]);
     const [maxAssignmentsPerEmployee] = useState<number>(1);
     const [maxEmployeesPerProject] = useState<number[]>([1, 2, 1, 2, 3]);
     const [solution, setSolution] = useState<AssignmentSolution | null>(null);
     const [assignments, setAssignments] = useState<Assignment[]>([]);
-
-
+    
+    
     const generateRandomMatrix = (rows:number,cols:number) => {
         const matrix = [];
         for (let i = 0; i < rows; i++) {
@@ -47,6 +49,7 @@ export const Assignments = () => {
         return matrix;
     }
     
+    const [efficiencyMatrix, setEfficiencyMatrix] = useState<number[][]>(generateRandomMatrix(8,5));
 
     // Tipamos las props de los componentes de renderizado
     interface RenderMatrixProps {
@@ -56,7 +59,7 @@ export const Assignments = () => {
         const totalRows = matrix.length;
        const colsInTable = matrix[0].length? 'grid-cols-6' : 'grid-cols-5';
        let header: JSX.Element[] = [];
-       if(totalRows>1){
+       if(totalRows>0){
         header = matrix[0].map((_cell:number,cellIndex:number)=><div key={cellIndex} className='self-center font-semibold'>P{cellIndex+1}</div>) 
         header.unshift(<div></div>)
        }
@@ -65,8 +68,8 @@ export const Assignments = () => {
         return matrix.map((row: number[], index: number) => (
             
             <div className={'grid gap-1 text-lg text-center even:bg-gray-200 ' + colsInTable} key={index}>
-                {totalRows>1 && index === 0 &&   header }
-                {totalRows>1 && <div className='self-center font-semibold '>E{index}</div>}
+                {totalRows>0 && index === 0 &&   header }
+                {totalRows>0 && <div className='self-center font-semibold '>E{index+1}</div>}
                 {row.map((cell: number, cellIndex: number) => (
                     <div key={cellIndex}>{cell}</div>
                 ))}
@@ -114,10 +117,24 @@ export const Assignments = () => {
         }   
         fetch('/api/actividad2',{method:'POST',body:JSON.stringify(solverData) ,headers: {'Content-Type': 'application/json'}})
             .then(response => response.json())
-            .then(data => setSolution(data))
+            .then(data =>{ setSolution(data)
+                //animar contenedor de la solucion
+                animateContainer();
+            })
             .catch(error => console.error('Error:', error));
     }
 
+    const animateContainer = () => {
+        const container = document.getElementById('solution-container');
+        if(container){
+            //animacion de slide up
+            container.animate([
+                {x:-200},
+                {x:0}
+            ],{duration:5000,easing:'ease-in-out'});
+        }
+    }
+        
 
     const showSolution = () => {
         console.log("TEST",solution);
@@ -162,34 +179,42 @@ export const Assignments = () => {
                 <p className="m-1 text-sm">Enlista que tan eficiente es cada empleado en el tipo de proyecto que le corresponde</p>
 
                 {/* matrix */}
-                <div className="m-2">
+                <motion.div className="m-2" initial={{ opacity: 0, x: 20 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, y: 20 }}>
                     <RenderMatrix matrix={efficiencyMatrix}/>
-                </div>
+                </motion.div>
                
                 </div>
 
                 {/* Mostrar la lista de asignaciones directamente */} 
                 {solution && assignments.length > 0 && (
-                    <div className='p-2 m-2 bg-white rounded-lg'> 
-                        <h2 className="mb-2 text-xl font-bold">Asignaciones Óptimas</h2>
-                         <ul className="pl-5 list-disc">
+                    <motion.div id='solution-container' className='p-2 m-2 bg-white rounded-lg' initial={{ opacity: 0, y: 200 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 200 }}> 
+                        <h2 className="mb-2 text-lg font-bold">Asignaciones Óptimas</h2>
+                         <ul className="pl-6 text-sm list-disc">
                             {assignments.map((assign, index) => (
                                 <li key={index}>
                                     Empleado {assign.employee+1} {'->'} Proyecto {assign.project+1} (Eficiencia: {assign.efficiency})
                                 </li>
                             ))}
                         </ul>
-                    </div>
+                    </motion.div>
                 )}
 
                 {/* Mostrar solution.message si existe */} 
                 {solution && solution.message && (
-                     <div className='p-2 m-2 text-yellow-800 bg-yellow-100 border border-yellow-300 rounded-lg'>
+                     <motion.div className='relative p-4 m-2 text-yellow-800 bg-yellow-100 border border-yellow-200 rounded-lg shadow-lg' initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 20 }}
+      
+      >
                         <p><strong>Mensaje del Solver:</strong> {solution.message}</p>
                         {solution.status === 0 && solution.optimalEfficiency !== undefined && (
                              <p><strong>Eficiencia Total Óptima:</strong> {solution.optimalEfficiency.toFixed(2)}</p>
                         )}
-                    </div>
+                    </motion.div>
                 )}
 
             <div className='p-2 m-2 bg-white rounded-lg'>
@@ -199,7 +224,9 @@ export const Assignments = () => {
                 {/* Mostrar maxEmployeesPerProject como texto */} 
                 <RenderMatrix matrix={[maxEmployeesPerProject]}/>
             </div>
-                <button className='w-full p-2 mb-4 font-bold text-white bg-blue-500 rounded-lg' onClick={getSolution}>Calcular Solucion</button>
+                <motion.button className='w-full p-2 mb-4 font-bold text-white bg-blue-500 rounded-lg' onClick={getSolution} initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 20 }}>Calcular Solucion</motion.button>
                
         </div>
         </div>

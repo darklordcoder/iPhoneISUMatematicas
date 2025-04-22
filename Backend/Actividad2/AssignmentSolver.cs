@@ -166,14 +166,7 @@ public class AssignmentSolver
                 efficiencyMatrix2[i, j] = efficiencyMatrix[i][j];
             }
         }
-        // var efficiencyMatrix2 = new int[efficiencyMatrix.Length / 2, efficiencyMatrix.Length / 2];
-        // for (int i = 0; i < efficiencyMatrix.Length / 2; i++)
-        // {
-        //     for (int j = 0; j < efficiencyMatrix.Length / 2; j++)
-        //     {
-        //         efficiencyMatrix2[i, j] = efficiencyMatrix[i * 2 + j];
-        //    as
-        // }sASadsasdadsasdad
+
         AssignmentSolution solution = SolveAssignmentProblem(
             efficiencyMatrix2,
             assignmentData.MaxAssignmentsPerEmployee,

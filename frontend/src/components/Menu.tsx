@@ -42,6 +42,13 @@ export const Menu = () => {
       highlightColor: "bg-orange-200"
     },
     {
+      id: 9,
+      title: "Dijkstra",
+      description: "Algoritmo de Dijkstra",
+      icon: "🌎",
+      path: "/dijkstra",
+    },
+    {
       id: 2,
       title: "Ciudades del Mundo",
       description: "Explora ciudades de diferentes países",

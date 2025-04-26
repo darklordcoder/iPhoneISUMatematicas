@@ -12,6 +12,7 @@ import Weather from './components/Weather';
 import { useState } from 'react';
 import { AuthLayout } from './layouts/AuthLayout';
 import { Assignments } from './actividades/actividad2/Assigments';
+import { Dijkstra } from './actividades/actvidad3/Dijkstra';
 function AnimatedRoutes() {
   const location = useLocation();
 
@@ -30,6 +31,7 @@ function AnimatedRoutes() {
           <Route path="/calculator" element={<Calculator />} />
           <Route path="/weather" element={<Weather />} />
           <Route path="/assignments" element={<Assignments />} />
+          <Route path="/dijkstra" element={<Dijkstra />} />
         </Route>
 
         {/* Ruta para manejar URLs no encontradas */}

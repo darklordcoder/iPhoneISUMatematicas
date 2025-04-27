@@ -47,6 +47,7 @@ export const Menu = () => {
       description: "Algoritmo de Dijkstra",
       icon: "🌎",
       path: "/dijkstra",
+      newWindow: true
     },
     {
       id: 2,
@@ -170,7 +171,14 @@ export const Menu = () => {
             return (
               <motion.button
                 key={item.path || item.id}
-                onClick={() => item.action ? item.action() : navigate(item.path!)}
+                // onClick={() => item.action ? item.action() : navigate(item.path!)}//
+                onClick={() => {
+                  if (item.newWindow) {
+                    window.open(item.path!, '_blank');
+                  } else {
+                    navigate(item.path!);
+                  }
+                }}
                 className={`
                 flex items-center w-full p-3 space-x-3 transition-all duration-300 shadow-sm rounded-xl
                 ${item.highlighted ? item.highlightColor : 'bg-white'}

@@ -46,7 +46,15 @@ function App() {
 
   return (
     <Router>
-      <PhoneFrame>
+      {/* //si la ruta es dijkstra no usar Phoneframe */}
+      {location.pathname === '/dijkstra' ? (
+        <AnimatePresence mode="wait">
+          <Routes location={location} key={location.pathname}>
+            <Route path="/dijkstra" element={<Dijkstra />} />
+          </Routes>
+        </AnimatePresence>
+      ) : (   
+        <PhoneFrame>
         <AnimatePresence mode="wait">
           {isBooting ? (
             <BootScreen onBootComplete={() => setIsBooting(false)} />
@@ -54,7 +62,8 @@ function App() {
             <AnimatedRoutes />
           )}
         </AnimatePresence>
-      </PhoneFrame>
+      </PhoneFrame> 
+      )}
     </Router>
   );
 }

@@ -52,6 +52,9 @@ export const Assignments = () => {
     const [efficiencyMatrix, setEfficiencyMatrix] = useState<number[][]>(generateRandomMatrix(8, 5));
 
     // Tipamos las props de los componentes de renderizado
+    interface RenderMatrixProps {
+        matrix: number[][];
+    }
     const RenderMatrix: React.FC<RenderMatrixProps> = newFunction();
 
     // interface RenderMatrix2Props {

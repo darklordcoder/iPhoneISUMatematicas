@@ -38,8 +38,7 @@ export const Menu = () => {
       color: "bg-gray-100",
       borderColor: "border-gray-200",
       iconColor: "text-gray-700",
-      highlighted: true,
-      highlightColor: "bg-orange-200"
+  
     },
     {
       id: 9,
@@ -47,7 +46,7 @@ export const Menu = () => {
       description: "Algoritmo de Dijkstra",
       icon: "🌎",
       path: "/dijkstra",
-      newWindow: true
+      newWindow: true,
     },
     {
       id: 2,

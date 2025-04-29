@@ -98,11 +98,15 @@ class Graph {
   // Función para reconstruir el camino más corto
   function getShortestPath(previous: { [key: string]: string | null }, endNode: string) {
     const path = [];
-    let current = endNode;
+    let current : string | null = endNode;
     
     while (current !== null) {
       path.unshift(current);
-      current = previous[current];
+      if (previous[current] !== null) {
+        current = previous[current];
+      } else {
+        break;
+      }
     }
     
     return path;
@@ -133,7 +137,7 @@ class Graph {
     };
   }
   
-  function visualizeResult(result: { distance: number, path: string[], message: string }) {
+  function visualizeResult(result: { distance: number, path: string[], message: string | undefined }) {
     if (result.distance === Infinity) {
       console.log(result.message);
       return;
@@ -147,10 +151,10 @@ export const Dijkstra = () => {
     const [nodeCount, setNodeCount] = useState(7);
     const [initialNode, setInitialNode] = useState(0);
     const [finalNode, setFinalNode] = useState(7);
-    const [shortestPath, setShortestPath] = useState();
-    const [shortestPathMessage2, setShortestPathMessage2] = useState();
-    const [shortestDistance, setShortestDistance] = useState();
-    const [shortestPathMessage, setShortestPathMessage] = useState();
+    const [shortestPath, setShortestPath] = useState<string[]>([]);
+    const [shortestPathMessage2, setShortestPathMessage2] = useState<string>("");
+    const [shortestDistance, setShortestDistance] = useState<string>("");
+    const [shortestPathMessage, setShortestPathMessage] = useState<string>("");
     const MaxWeight = 30;
     const nodeLabels = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
     const cointToss = () => {
@@ -200,72 +204,72 @@ export const Dijkstra = () => {
     ]);
 
     //algoritmo de dijkstra
-    const minimalDistance = (distances: number[], visitado: boolean[]) => {
-        //encontrar el nodo con la distancia minima
-        let minValue = Infinity;
-        //encontrar el indice del nodo con la distancia minima
-        let minIndex = -1;
-        //recorrer todos los nodos
-        for (let v = 0; v < distances.length; v++) {
-            //si el nodo no esta visitado y la distancia es menor que el minimo
-            if (!visitado[v] && distances[v] <= minValue) {
-                //actualizar el minimo
-                minValue = distances[v];
-                //actualizar el indice del nodo con la distancia minima
-                minIndex = v;
-            }
-        }
-        return minIndex;
-    }
+    // const minimalDistance = (distances: number[], visitado: boolean[]) => {
+    //     //encontrar el nodo con la distancia minima
+    //     let minValue = Infinity;
+    //     //encontrar el indice del nodo con la distancia minima
+    //     let minIndex = -1;
+    //     //recorrer todos los nodos
+    //     for (let v = 0; v < distances.length; v++) {
+    //         //si el nodo no esta visitado y la distancia es menor que el minimo
+    //         if (!visitado[v] && distances[v] <= minValue) {
+    //             //actualizar el minimo
+    //             minValue = distances[v];
+    //             //actualizar el indice del nodo con la distancia minima
+    //             minIndex = v;
+    //         }
+    //     }
+    //     return minIndex;
+    // }
 
-    const dijkstraAlgorithm = (adyMatrix: number[][], initialNode: number, finalNode: number) => {
-        const distance = [];
-        const visited = [];
-        const firstNode = initialNode ? initialNode : 0;
-        const lastNode = finalNode ? finalNode : adyMatrix.length;
-        //inicializar distancia y visitado
-        for (let i = 0; i < adyMatrix.length; i++) {
-            distance[i] = Infinity;
-            visited[i] = false;
-        }
-        //asignar distancia inicial
-        distance[firstNode] = 0;
-        //recorrer todos los nodos
-        for (let i = 0; i < adyMatrix.length - 1; i++) {
-            //encontrar el nodo con la distancia minima
-            const u = minimalDistance(distance, visited);
-            visited[u] = true;
-            for (let v = 0; v <= lastNode; v++) {
-                //actualizar distancia y path
-                if (!visited[v] && adyMatrix[u][v] != 0 && distance[u] != Infinity && distance[u] + adyMatrix[u][v] < distance[v]) {
-                    distance[v] = distance[u] + adyMatrix[u][v];
-                }
-            }
-        }
-        return { distance };
-    }
+    // const dijkstraAlgorithm = (adyMatrix: number[][], initialNode: number, finalNode: number) => {
+    //     const distance = [];
+    //     const visited = [];
+    //     const firstNode = initialNode ? initialNode : 0;
+    //     const lastNode = finalNode ? finalNode : adyMatrix.length;
+    //     //inicializar distancia y visitado
+    //     for (let i = 0; i < adyMatrix.length; i++) {
+    //         distance[i] = Infinity;
+    //         visited[i] = false;
+    //     }
+    //     //asignar distancia inicial
+    //     distance[firstNode] = 0;
+    //     //recorrer todos los nodos
+    //     for (let i = 0; i < adyMatrix.length - 1; i++) {
+    //         //encontrar el nodo con la distancia minima
+    //         const u = minimalDistance(distance, visited);
+    //         visited[u] = true;
+    //         for (let v = 0; v <= lastNode; v++) {
+    //             //actualizar distancia y path
+    //             if (!visited[v] && adyMatrix[u][v] != 0 && distance[u] != Infinity && distance[u] + adyMatrix[u][v] < distance[v]) {
+    //                 distance[v] = distance[u] + adyMatrix[u][v];
+    //             }
+    //         }
+    //     }
+    //     return { distance };
+    // }
 
     //converit matriz de adyacencia a lista de adyacencia en duplas
-    const matrixToList = (matriz: number[][]) => {
-        const lista = [];
-        for (let i = 0; i < matriz.length; i++) {
-            const row = [];
-            for (let j = 0; j < matriz[i].length; j++) {
-                if (matriz[i][j] > 0)
-                    row.push({ [nodeLabels[j]]: matriz[i][j] });
-            }
-            //copnveritr arrary a objeto
-            const obj = {};
-            row.forEach((item: { [key: string]: number }) => {
-                Object.entries(item).forEach(([key, value]) => {
-                    (obj as { [key: string]: number })[key] = value;
-                });
-            });
-            const nodo = nodeLabels[i];
-            lista.push({ [nodo]: obj });
-        }
-        return lista;
-    }
+    // const matrixToList = (matriz: number[][]) => {
+    //     const lista = [];
+    //     for (let i = 0; i < matriz.length; i++) {
+    //         const row = [];
+    //         for (let j = 0; j < matriz[i].length; j++) {
+    //             if (matriz[i][j] > 0)
+    //                 row.push({ [nodeLabels[j]]: matriz[i][j] });
+    //         }
+    //         //copnveritr arrary a objeto
+    //         const obj = {};
+    //         row.forEach((item: { [key: string]: number }) => {
+    //             Object.entries(item).forEach(([key, value]) => {
+    //                 (obj as { [key: string]: number })[key] = value;
+    //             });
+    //         });
+    //         const nodo = nodeLabels[i];
+    //         lista.push({ [nodo]: obj });
+    //     }
+    //     return lista;
+    // }
 
     //convertir matriz de adyacencia a lista de adyacencia en duplas
     const grafo = adyasenceMatrix.map((row, i) =>
@@ -308,9 +312,9 @@ export const Dijkstra = () => {
         node [shape=circle];
             ${localNodelist.map((edge: { source: string, target: string, weight: number }[]) =>
             edge.map((node: { source: string, target: string, weight: number }) => {
-                console.log(JSON.stringify(shortestPath))
-                console.log(node.target, shortestPath?.indexOf(node.target))
-                console.log(node.source, shortestPath?.indexOf(node.source))
+                // console.log(JSON.stringify(shortestPath))
+                // console.log(node.target, shortestPath?.indexOf(node.target))
+                // console.log(node.source, shortestPath?.indexOf(node.source))
 
                 const color = shortestPath?.includes(node.source) && shortestPath?.includes(node.target) && shortestPath?.indexOf(node.source) == shortestPath?.indexOf(node.target)-1 ? "[color=red,penwidth=3.0]" : "";
                 if (node.weight > 0)
@@ -340,11 +344,11 @@ export const Dijkstra = () => {
         for (let i = 0; i < adyasenceMatrix.length; i++) {
             for (let j = 0; j < adyasenceMatrix[i].length; j++) {
                 if (adyasenceMatrix[i][j] > 0)
-                graph.addEdge([nodeLabels[i]], [nodeLabels[j]], adyasenceMatrix[i][j]);
+                    graph.addEdge(nodeLabels[i], nodeLabels[j], adyasenceMatrix[i][j]);
             }
         }
 
-        const result = findShortestPath(graph, nodeLabels[initialNode], nodeLabels[finalNode]);
+        const result : { distance: number, path: string[], message: string | undefined } = findShortestPath(graph, nodeLabels[initialNode], nodeLabels[finalNode]);
         console.log(graph.edges);
         setGraph(graph);
         setShortestPath(result.path);

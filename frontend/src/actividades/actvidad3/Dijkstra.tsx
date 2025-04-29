@@ -350,13 +350,6 @@ export const Dijkstra = () => {
                     </div>
                     <div className={classCardBody + ' text-sm'}>
                         <h4 className={classCardHeader}>Distancia minima</h4>
-                        {/* {dijkstraAlgorithm(adyasenceMatrix, initialNode, finalNode).distance.map((distance, i) => (
-                            <>{distance != Infinity && distance != 0 &&
-                                <div key={i}>
-                                    {nodeLabels[initialNode]} =&gt;  {nodeLabels[i]}: {distance}
-                                </div>
-                            }</>
-                        ))} */}
                         {shortestDistance}<br /> {shortestPathMessage2}<br /> {shortestPathMessage}
                     </div>
                 </div>

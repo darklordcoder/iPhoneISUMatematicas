@@ -13,6 +13,7 @@ import { useState } from 'react';
 import { AuthLayout } from './layouts/AuthLayout';
 import { Assignments } from './actividades/actividad2/Assigments';
 import { Dijkstra } from './actividades/actvidad3/Dijkstra';
+import { Arboles } from './actividades/actividad4/Arboles';
 function AnimatedRoutes() {
   const location = useLocation();
 
@@ -32,6 +33,7 @@ function AnimatedRoutes() {
           <Route path="/weather" element={<Weather />} />
           <Route path="/assignments" element={<Assignments />} />
           <Route path="/dijkstra" element={<Dijkstra />} />
+          <Route path="/Arboles" element={<Arboles />} />
         </Route>
 
         {/* Ruta para manejar URLs no encontradas */}
@@ -47,10 +49,11 @@ function App() {
   return (
     <Router>
       {/* //si la ruta es dijkstra no usar Phoneframe */}
-      {location.pathname === '/dijkstra' ? (
+      {location.pathname === '/dijkstra' || location.pathname === '/Arboles' ? (
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
             <Route path="/dijkstra" element={<Dijkstra />} />
+            <Route path="/Arboles" element={<Arboles />} />
           </Routes>
         </AnimatePresence>
       ) : (   

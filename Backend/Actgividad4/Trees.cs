@@ -7,37 +7,33 @@ namespace BinaryTrees
         public int Value { get; set; }
         public TreeNode? left { get; set; }
         public TreeNode? right { get; set; }
-        private StringBuilder output { get; set; }
 
-        public TreeNode(int value, StringBuilder output)
+        public TreeNode(int value)
         {
             Value = value;
             left = null;
             right = null;
-            this.output = output;
         }
     }
 
     public class BinaryTree
     {
         public TreeNode? Root { get; set; }
-        public StringBuilder output { get; set; }
 
-        public BinaryTree(StringBuilder output)
+        public BinaryTree()
         {
             Root = null;
-            this.output = output;
         }
 
-        public void Insert(int value)
+        private void Insert(int value)
         {
             Root = InsertNode(Root, value);
         }
 
-        private TreeNode InsertNode(TreeNode node, int value)
+        private TreeNode? InsertNode(TreeNode? node, int value)
         {
             if (node == null)
-                return new TreeNode(value, output);
+                return new TreeNode(value);
             if (value < node.Value)
                 node.left = InsertNode(node.left, value);
             else if (value > node.Value)
@@ -45,55 +41,11 @@ namespace BinaryTrees
             return node;
         }
 
-        public void Inorder()
+        //contruir arbol desde un array
+        public void BuildTree(int[] values)
         {
-            output.AppendLine("Inorder:");
-            Inorder(Root);
-            output.AppendLine();
-        }
-
-        private void Inorder(TreeNode node)
-        {
-            if (node != null)
-            {
-                Inorder(node.left);
-                output.Append(node.Value + " ");
-                Inorder(node.right);
-            }
-        }
-
-        public void Preorder()
-        {
-            output.AppendLine("Preorder:");
-            Preorder(Root);
-            output.AppendLine();
-        }
-
-        private void Preorder(TreeNode node)
-        {
-            if (node != null)
-            {
-                output.Append(node.Value + " ");
-                Preorder(node.left);
-                Preorder(node.right);
-            }
-        }
-
-        public void Postorder()
-        {
-            output.AppendLine("Postorder:");
-            Postorder(Root);
-            output.AppendLine();
-        }
-
-        private void Postorder(TreeNode node)
-        {
-            if (node != null)
-            {
-                Postorder(node.left);
-                Postorder(node.right);
-                output.Append(node.Value + " ");
-            }
+            foreach (int value in values)
+                Insert(value);
         }
 
         public bool Search(int value)
@@ -101,7 +53,7 @@ namespace BinaryTrees
             return SearchNode(Root, value);
         }
 
-        private bool SearchNode(TreeNode node, int value)
+        private bool SearchNode(TreeNode? node, int value)
         {
             if (node == null)
                 return false;
@@ -113,7 +65,7 @@ namespace BinaryTrees
                 return SearchNode(node.right, value);
         }
 
-        public void InorderArray(TreeNode node, List<int> values)
+        public void InorderArray(TreeNode? node, List<int> values)
         {
             if (node != null)
             {
@@ -123,7 +75,7 @@ namespace BinaryTrees
             }
         }
 
-        public void PreorderArray(TreeNode node, List<int> values)
+        public void PreorderArray(TreeNode? node, List<int> values)
         {
             if (node != null)
             {
@@ -133,7 +85,7 @@ namespace BinaryTrees
             }
         }
 
-        public void PostorderArray(TreeNode node, List<int> values)
+        public void PostorderArray(TreeNode? node, List<int> values)
         {
             if (node != null)
             {
@@ -143,12 +95,12 @@ namespace BinaryTrees
             }
         }
 
-        private TreeNode BuildBalancedTree(List<int> values, int start, int end)
+        private TreeNode? BuildBalancedTree(List<int> values, int start, int end)
         {
             if (start > end)
                 return null;
             int mid = (start + end) / 2;
-            TreeNode node = new TreeNode(values[mid], output);
+            TreeNode node = new TreeNode(values[mid]);
             node.left = BuildBalancedTree(values, start, mid - 1);
             node.right = BuildBalancedTree(values, mid + 1, end);
             return node;

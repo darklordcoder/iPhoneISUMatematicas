@@ -11,24 +11,25 @@ interface TreeNode {
 export const Arboles = () => {
     const [nodeCount, setNodeCount] = useState(20);
     const [maxValue, setMaxValue] = useState(50);
-    const [grafo, setGrafo] = useState({});
-    const [grafo2, setGrafo2] = useState({});
+    const [binaryTree, setBinaryTree] = useState({});
+    const [binaryTree2, setBinaryTree2] = useState({});
     const [inorderList, setInorderList] = useState([]);
     const [preorderList, setPreorderList] = useState([]);
     const [postorderList, setPostorderList] = useState([]);
-    const [balancerInorderList, setBalancerInorderList  ] = useState([]);
-    const [balancerPreorderList, setBalancerPreorderList] = useState([]);
-    const [balancerPostorderList, setBalancerPostorderList] = useState([]);
+    const [balancedInorderList, setBalancedInorderList  ] = useState([]);
+    const [balancedPreorderList, setBalancedPreorderList] = useState([]);
+    const [balancedPostorderList, setBalancedPostorderList] = useState([]);
 
     const [valueToSearch, setValueToSearch] = useState(40);
     const [valueList, setValueList] = useState<number[]>([]);
+    const [searchResult, setSearchResult] = useState<null | boolean>(null);
     //generador de array aleatorio de 
     const generateRandomArray = (nodeCount: number) => {
         return Array.from({ length: nodeCount }, () => Math.floor(Math.random() * maxValue));
     }
 
     //post 
-    const fetchData = async () => {
+    const fetchTreeProcess = async () => {
         const url = 'api/actividad4';
         const response = await fetch(url, {
             method: 'POST',
@@ -40,17 +41,19 @@ export const Arboles = () => {
         if (response.ok) {
             const data = await response.json();
             console.log(data);
-            setGrafo(data.data.balancedTree);
-            setGrafo2(data.data.tree);
+            setBinaryTree(data.data.balancedTree);
+            setBinaryTree2(data.data.tree);
             setInorderList(data.data.inorderList);
             setPreorderList(data.data.preorderList);
             setPostorderList(data.data.postorderList);
-            setBalancerInorderList(data.data.balancedInorderList);
-            setBalancerPreorderList(data.data.balancedPreorderList);
-            setBalancerPostorderList(data.data.balancedPostorderList);
+            setBalancedInorderList(data.data.balancedInorderList);
+            setBalancedPreorderList(data.data.balancedPreorderList);
+            setBalancedPostorderList(data.data.balancedPostorderList);
+            setSearchResult(data.data.searchResult);
             return data;
         } else {
             console.error('Error al obtener los datos');
+            setSearchResult(null);
             return null;
         }
     }
@@ -60,11 +63,11 @@ export const Arboles = () => {
         function traverse(node: TreeNode | null | undefined) {
             if (!node) return;
             if (node.left) {
-                dot += `  ${node.value} -- ${node.left.value} [color=blue];\n`;
+                dot += `  ${node.value} -- ${node.left.value} [color=blue, penwidth=3];\n`;
                 traverse(node.left);
             }
             if (node.right) {
-                dot += `  ${node.value} -- ${node.right.value} [color=red];\n`;
+                dot += `  ${node.value} -- ${node.right.value} [color=red, penwidth=3];\n`;
                 traverse(node.right);
             }
         }
@@ -87,13 +90,14 @@ export const Arboles = () => {
     const buttonStyle = 'px-6 py-3 m-2 text-white bg-blue-800 rounded-xl hover:bg-blue-900 transition-colors duration-200 shadow-lg hover:shadow-xl';
 
     return (
-        <div className="min-h-screen p-8 bg-gray-400">
+        <div className="min-h-screen p-2 bg-gray-400">
             <div className="mx-auto max-w-7xl">
 
                 
                 <div className="p-2 mb-4 bg-white shadow-lg rounded-xl">
-                   
-                    <div className="flex flex-wrap justify-center gap-2 mb-6">
+                    {/* Panel de resultado de búsqueda */}
+                  
+                    <div className="flex flex-wrap justify-center gap-2 mb-2">
                         <div className="flex flex-col items-start">
                             <label className="mb-1 font-medium text-gray-700">Valores generados (edítalos separados por coma):</label>
                             <input
@@ -135,55 +139,60 @@ export const Arboles = () => {
                          <button className={buttonStyle} onClick={generateValues}>
                             Generar Valores <i className="fa-solid fa-rotate-right"></i>
                         </button>
-                        <button className={buttonStyle} onClick={fetchData}>
+                        <button className={buttonStyle} onClick={fetchTreeProcess}>
                             Generar Árboles
                         </button>
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+                <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
                     {/* Árbol Original */}
-                    <div className="p-6 bg-white shadow-lg rounded-xl">
+                    <div className="p-4 bg-white shadow-lg rounded-xl">
                         <h4 className="mb-4 text-lg font-semibold text-center text-gray-800">Árbol Original</h4>
                         <div className="p-4 mb-6 border rounded-lg">
-                            <Graphviz dot={jsonToDot((grafo2 && (grafo2 as TreeNode).value !== undefined) ? (grafo2 as TreeNode) : null)} options={{ width: '100%', height: '350px' }} />
+                            <Graphviz dot={jsonToDot((binaryTree2 && (binaryTree2 as TreeNode).value !== undefined) ? (binaryTree2 as TreeNode) : null)} options={{ width: '100%', height: '350px' }} />
                         </div>
                         
                         <div className="space-y-4">
+                        {searchResult !== null && (
+                        <div className={`mb-4 px-4 py-2 rounded-lg font-semibold text-center ${searchResult ? 'bg-green-100 text-green-800 border border-green-300' : 'bg-red-100 text-red-800 border border-red-300'}`}>
+                            {searchResult ? `¡El valor ${valueToSearch} fue encontrado en el árbol original!` : `El valor ${valueToSearch} NO fue encontrado en el árbol original.`}
+                        </div>
+                    )}
                             <div className="p-2 bg-gray-200 rounded-md">
                                 <h3 className="mb-2 font-medium text-gray-700 text-md">Inorder</h3>
-                                <p className="text-gray-600">{inorderList.join(', ')}</p>
+                                <p className="text-gray-600">{inorderList.join(' -> ')}</p>
                             </div>
                             <div className="p-2 bg-gray-200 rounded-md">
                                 <h3 className="mb-2 font-medium text-gray-700 text-md">Preorder</h3>
-                                <p className="text-gray-600">{preorderList.join(', ')}</p>
+                                <p className="text-gray-600">{preorderList.join(' -> ')}</p>
                             </div>
                             <div className="p-2 bg-gray-200 rounded-md">
                                 <h3 className="mb-2 font-medium text-gray-700 text-md">Postorder</h3>
-                                <p className="text-gray-600">{postorderList.join(', ')}</p>
+                                <p className="text-gray-600">{postorderList.join(' -> ')}</p>
                             </div>
                         </div>
                     </div>
 
                     {/* Árbol Balanceado */}
-                    <div className="p-6 bg-white shadow-lg rounded-xl">
+                    <div className="p-4 bg-white shadow-lg rounded-xl">
                         <h4 className="mb-4 text-lg font-semibold text-center text-gray-800">Árbol Balanceado</h4>
                         <div className="p-4 mb-6 border rounded-lg 0">
-                            <Graphviz dot={jsonToDot((grafo && (grafo as TreeNode).value !== undefined) ? (grafo as TreeNode) : null)} options={{ width: '100%', height: '350px'}} />
+                            <Graphviz dot={jsonToDot((binaryTree && (binaryTree as TreeNode).value !== undefined) ? (binaryTree as TreeNode) : null)} options={{ width: '100%', height: '350px'}} />
                         </div>
                         
                         <div className="space-y-4">
                             <div className="p-2 bg-gray-200 rounded-md">
                                 <h3 className="mb-2 font-medium text-gray-700 text-md">Inorder</h3>
-                                <p className="text-gray-600">{balancerInorderList.join(', ')}</p>
+                                <p className="text-gray-600">{balancedInorderList.join(' -> ')}</p>
                             </div>
                             <div className="p-2 bg-gray-200 rounded-md">
                                 <h3 className="mb-2 font-medium text-gray-700 text-md">Preorder</h3>
-                                <p className="text-gray-600">{balancerPreorderList.join(', ')}</p>
+                                <p className="text-gray-600">{balancedPreorderList.join(' -> ')}</p>
                             </div>
                             <div className="p-2 bg-gray-200 rounded-md">
                                 <h3 className="mb-2 font-medium text-gray-700 text-md">Postorder</h3>
-                                <p className="text-gray-600">{balancerPostorderList.join(', ')}</p>
+                                <p className="text-gray-600">{balancedPostorderList.join(' -> ')}</p>
                             </div>
                         </div>
                     </div>

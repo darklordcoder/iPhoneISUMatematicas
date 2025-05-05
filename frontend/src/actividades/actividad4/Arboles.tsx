@@ -11,7 +11,7 @@ interface TreeNode {
 export const Arboles = () => {
     const [nodeCount, setNodeCount] = useState(20);
     const [maxValue, setMaxValue] = useState(50);
-    const [binaryTree, setBinaryTree] = useState({});
+    const [balancedBinaryTree, setBalancedBinaryTree] = useState({});
     const [binaryTree2, setBinaryTree2] = useState({});
     const [inorderList, setInorderList] = useState([]);
     const [preorderList, setPreorderList] = useState([]);
@@ -41,15 +41,15 @@ export const Arboles = () => {
         if (response.ok) {
             const data = await response.json();
             console.log(data);
-            setBinaryTree(data.data.balancedTree);
-            setBinaryTree2(data.data.tree);
-            setInorderList(data.data.inorderList);
-            setPreorderList(data.data.preorderList);
-            setPostorderList(data.data.postorderList);
-            setBalancedInorderList(data.data.balancedInorderList);
-            setBalancedPreorderList(data.data.balancedPreorderList);
-            setBalancedPostorderList(data.data.balancedPostorderList);
-            setSearchResult(data.data.searchResult);
+            setBinaryTree2(data.data.treeStructure.tree);
+            setBalancedBinaryTree(data.data.balancedTreeStructure.tree);
+            setInorderList(data.data.treeStructure.inorderList);
+            setPreorderList(data.data.treeStructure.preorderList);
+            setPostorderList(data.data.treeStructure.postorderList);
+            setBalancedInorderList(data.data.balancedTreeStructure.inorderList);
+            setBalancedPreorderList(data.data.balancedTreeStructure.preorderList);
+            setBalancedPostorderList(data.data.balancedTreeStructure.postorderList);
+            setSearchResult(data.data.treeStructure.searchResult);
             return data;
         } else {
             console.error('Error al obtener los datos');
@@ -87,6 +87,33 @@ export const Arboles = () => {
         setValueList(arr);
     };
 
+    const addValues = async () => {
+        const url = 'api/actividad4/addValues';
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ valueList: valueList })
+        });
+        if (response.ok) {
+            const data = await response.json();
+            console.log(data.data);
+
+            setBinaryTree2(data.data.treeStructure.tree);
+            setBalancedBinaryTree(data.data.balancedTreeStructure.tree);
+            setSearchResult(data.data.treeStructure.searchResult);
+            setInorderList(data.data.treeStructure.inorderList);
+            setPreorderList(data.data.treeStructure.preorderList);
+            setPostorderList(data.data.treeStructure.postorderList);    
+            setBalancedInorderList(data.data.balancedTreeStructure.inorderList);
+            setBalancedPreorderList(data.data.balancedTreeStructure.preorderList);
+            setBalancedPostorderList(data.data.balancedTreeStructure.postorderList);
+        } else {
+            console.error('Error al agregar los valores');
+        }
+    }
+
     const buttonStyle = 'px-6 py-3 m-2 text-white bg-blue-800 rounded-xl hover:bg-blue-900 transition-colors duration-200 shadow-lg hover:shadow-xl';
 
     return (
@@ -108,30 +135,30 @@ export const Arboles = () => {
                             />
                         </div>
                         <div className="flex flex-col items-start">
-                            <label className="mb-1 font-medium text-gray-700">Valor a buscar:</label>
+                            <label className="mb-1 font-medium text-gray-700">Buscar:</label>
                             <input
                                 type="number"
-                                className="w-32 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 bg-gray-50"
+                                className="w-16 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 bg-gray-50"
                                 value={valueToSearch}
                                 onChange={e => setValueToSearch(Number(e.target.value))}
                             />
                         </div>
                         <div className="flex flex-col items-start">
-                            <label className="mb-1 font-medium text-gray-700">Cantidad de nodos:</label>
+                            <label className="mb-1 font-medium text-gray-700">Nodos:</label>
                             <input
                                 type="number"
                                 min={1}
-                                className="w-32 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 bg-gray-50"
+                                className="w-16 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 bg-gray-50"
                                 value={nodeCount}
                                 onChange={e => setNodeCount(Number(e.target.value))}
                             />
                         </div>
                         <div className="flex flex-col items-start">
-                            <label className="mb-1 font-medium text-gray-700">Valor máximo:</label>
+                            <label className="mb-1 font-medium text-gray-700">V. máx:</label>
                             <input
                                 type="number"
                                 min={1}
-                                className="w-32 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 bg-gray-50"
+                                className="w-16 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 bg-gray-50"
                                 value={maxValue}
                                 onChange={e => setMaxValue(Number(e.target.value))}
                             />
@@ -141,6 +168,9 @@ export const Arboles = () => {
                         </button>
                         <button className={buttonStyle} onClick={fetchTreeProcess}>
                             Generar Árboles
+                        </button>
+                        <button className={buttonStyle} onClick={addValues}>
+                            Agregar Valores
                         </button>
                     </div>
                 </div>
@@ -178,7 +208,7 @@ export const Arboles = () => {
                     <div className="p-4 bg-white shadow-lg rounded-xl">
                         <h4 className="mb-4 text-lg font-semibold text-center text-gray-800">Árbol Balanceado</h4>
                         <div className="p-4 mb-6 border rounded-lg 0">
-                            <Graphviz dot={jsonToDot((binaryTree && (binaryTree as TreeNode).value !== undefined) ? (binaryTree as TreeNode) : null)} options={{ width: '100%', height: '350px'}} />
+                            <Graphviz dot={jsonToDot((balancedBinaryTree && (balancedBinaryTree as TreeNode).value !== undefined) ? (balancedBinaryTree as TreeNode) : null)} options={{ width: '100%', height: '350px'}} />
                         </div>
                         
                         <div className="space-y-4">

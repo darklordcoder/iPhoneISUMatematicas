@@ -38,7 +38,11 @@ else
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"))
     );
-}
+}   
+
+// Add Session
+builder.Services.AddSession();
+builder.Services.AddDistributedMemoryCache();
 
 // Add Authentication Service
 builder.Services.AddScoped<AuthService>();
@@ -69,6 +73,7 @@ if (app.Environment.IsDevelopment())
 
 // Usar CORS
 app.UseCors("AllowReactApp");
+app.UseSession();
 
 // Agregar soporte para archivos estáticos
 app.UseDefaultFiles();

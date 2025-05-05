@@ -154,5 +154,12 @@ namespace BinaryTrees
             // Reconstruye el árbol balanceado
             Root = BuildBalancedTree(values, 0, values.Count - 1);
         }
+
+        // Agregar nuevos valores al árbol
+        public void AddValues(int[] values)
+        {
+            foreach (int value in values)
+                Insert(value);
+        }
     }
 }

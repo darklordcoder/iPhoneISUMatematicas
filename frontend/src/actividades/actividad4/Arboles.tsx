@@ -30,6 +30,16 @@ export const Arboles = () => {
 
     //post 
     const fetchTreeProcess = async () => {
+        const 
+        let buttonsVisible:{
+            btnGenerate:boolean,
+            btnFetch:boolean,
+            btnAdd:boolean
+        } = {
+            btnGenerate:true,
+            btnFetch:false,
+            btnAdd:false
+        }
         const url = 'api/actividad4';
         const response = await fetch(url, {
             method: 'POST',
@@ -77,6 +87,8 @@ export const Arboles = () => {
     }
 
     const generateValues = () => {
+        //hide button
+        buttonsVisible.btnGenerate = false; 
         setValueList(generateRandomArray(nodeCount));
     }
 
@@ -114,7 +126,7 @@ export const Arboles = () => {
         }
     }
 
-    const buttonStyle = 'px-6 py-3 m-2 text-white bg-blue-800 rounded-xl hover:bg-blue-900 transition-colors duration-200 shadow-lg hover:shadow-xl';
+    const buttonStyle = 'px-6 py-3 m-2 text-white bg-blue-500 rounded-xl hover:bg-blue-600 transition-colors duration-200 shadow-lg hover:shadow-xl';
 
     return (
         <div className="min-h-screen p-2 bg-gray-400">
@@ -166,10 +178,10 @@ export const Arboles = () => {
                          <button className={buttonStyle} onClick={generateValues}>
                             Generar Valores <i className="fa-solid fa-rotate-right"></i>
                         </button>
-                        <button className={buttonStyle} onClick={fetchTreeProcess}>
-                            Generar Árboles
+                        <button className={buttonStyle + ' bg-green-600 hover:bg-green-700'} onClick={fetchTreeProcess}>
+                            Nuevo Árbol
                         </button>
-                        <button className={buttonStyle} onClick={addValues}>
+                        <button className={buttonStyle + ' bg-orange-600 hover:bg-orange-700'} onClick={addValues}>
                             Agregar Valores
                         </button>
                     </div>

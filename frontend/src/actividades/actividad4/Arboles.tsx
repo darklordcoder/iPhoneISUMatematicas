@@ -30,16 +30,6 @@ export const Arboles = () => {
 
     //post 
     const fetchTreeProcess = async () => {
-        const 
-        let buttonsVisible:{
-            btnGenerate:boolean,
-            btnFetch:boolean,
-            btnAdd:boolean
-        } = {
-            btnGenerate:true,
-            btnFetch:false,
-            btnAdd:false
-        }
         const url = 'api/actividad4';
         const response = await fetch(url, {
             method: 'POST',
@@ -87,8 +77,6 @@ export const Arboles = () => {
     }
 
     const generateValues = () => {
-        //hide button
-        buttonsVisible.btnGenerate = false; 
         setValueList(generateRandomArray(nodeCount));
     }
 
